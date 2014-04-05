@@ -74,24 +74,24 @@ for name, url in items:
     enemies = get_enemies (char_js_object)
     friends = get_friends (char_js_object)
     
-for enemy, _url in enemies:
-    csv_writer.writerow ([get_ascii (name.lower()), get_ascii (enemy.lower()), "0"])
-    enemy_json = get_json_response (get_char_url_generator_specific (_url))
-    more_enemies = get_enemies (enemy_json)
-    more_friends = get_friends (enemy_json)
-    for more_enemy, _ in more_enemies:
-        csv_writer.writerow([get_ascii (enemy.lower()), get_ascii (more_enemy.lower()), "0"])
-    for more_friend, _ in more_friends:
-        csv_writer.writerow([get_ascii (enemy.lower()), get_ascii (more_friend.lower()), "1"])
+    for enemy, _url in enemies:
+        csv_writer.writerow ([get_ascii (name.lower()), get_ascii (enemy.lower()), "0"])
+        enemy_json = get_json_response (get_char_url_generator_specific (_url))
+        more_enemies = get_enemies (enemy_json)
+        more_friends = get_friends (enemy_json)
+        for more_enemy, _ in more_enemies:
+            csv_writer.writerow([get_ascii (enemy.lower()), get_ascii (more_enemy.lower()), "0"])
+        for more_friend, _ in more_friends:
+            csv_writer.writerow([get_ascii (enemy.lower()), get_ascii (more_friend.lower()), "1"])
         
-for friend, _url in friends:
-    csv_writer.writerow ([get_ascii (name.lower()), get_ascii (friend.lower()), "1"])
-    friend_json = get_json_response (get_char_url_generator_specific (_url))
-    more_enemies = get_enemies (friend_json)
-    more_friends = get_friends (friend_json)
-    for more_enemy, _ in more_enemies:
-        csv_writer.writerow([get_ascii (friend.lower()), get_ascii (more_enemy.lower()), "0"])
-    for more_friend, _ in more_friends:
-        csv_writer.writerow([get_ascii (friend.lower()), get_ascii (more_friend.lower()), "1"])
+    for friend, _url in friends:
+        csv_writer.writerow ([get_ascii (name.lower()), get_ascii (friend.lower()), "1"])
+        friend_json = get_json_response (get_char_url_generator_specific (_url))
+        more_enemies = get_enemies (friend_json)
+        more_friends = get_friends (friend_json)
+        for more_enemy, _ in more_enemies:
+            csv_writer.writerow([get_ascii (friend.lower()), get_ascii (more_enemy.lower()), "0"])
+        for more_friend, _ in more_friends:
+            csv_writer.writerow([get_ascii (friend.lower()), get_ascii (more_friend.lower()), "1"])
             
 csv_writer.close()
