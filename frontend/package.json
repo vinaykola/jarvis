@@ -1,0 +1,11 @@
+{
+  "name"         : "jarvis",
+  "version"      : "0.0.0",
+  "description"  : "Greatest DAVA Project Ever",
+  "main"         : "server.js",
+  "author"       : "Batman",
+  "dependencies" : 
+    {
+      "express"    : "~3.5.1"
+    }
+  }
