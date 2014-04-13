@@ -1,7 +1,7 @@
 from py2neo import neo4j
 from py2neo import node,rel
-
-characters_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
+from py2neo import neo4j
+from collections import defaultdict
 
 filename = './output1.csv'
 
@@ -27,11 +27,12 @@ with open(filename) as fil:
         
         
 # Make the list of nodes unique
-nodes = {node['name']:node for node in nodes}.values() 
+nodes = {node1['name']:node1 for node1 in nodes}.values() 
+
 
 # Generate mapping from character names to node numbers
-for i,node in enumerate(nodes):
-    char_to_node_mapping[node['name']] = i
+for i,node2 in enumerate(nodes):
+    char_to_node_mapping[node2['name']] = i
 
 neo4j_edges = []
 
@@ -44,8 +45,40 @@ for n1,n2,pol in edges:
         else:
             neo4j_edges.append((char_to_node_mapping[n1],"FOE",char_to_node_mapping[n2]))
     except:
-        print n1,n2,pol
+        print "error"
 
 #print nodes[:10]
 #print
-#print neo4j_edges[:10]
+#print neo4j_edges[:10]x
+
+characters_db1 = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
+characters_db1.clear()
+batch = neo4j.WriteBatch(characters_db1)
+listOfNodeReferences = defaultdict()
+temp = ""
+num = 0
+#a1 = batch.create(node(name="Superman"))
+#a2 = batch.create(node(name="Batman"))
+
+#rel(a1, "PLAYS", a2),
+
+for word in nodes:
+    temp = batch.create(node(word))
+    listOfNodeReferences[num] = temp
+    num+=1
+
+for word in neo4j_edges:
+ #   print listOfNodeReferences[word[0]],word[1],listOfNodeReferences[word[2]]
+    batch.create(rel(listOfNodeReferences[word[0]], word[1], listOfNodeReferences[word[2]]))
+
+try:
+    results = batch.submit()
+except:
+    print "Encountered exception"
+file1 = open("output.txt","w")
+file1.write(results)
+for word in results:
+    file1.write(word["name"])
+print "Completed"
+
+
