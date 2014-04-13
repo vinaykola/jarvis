@@ -1,0 +1,16 @@
+Minutes of the meeting 
+
+1. Search with random character display - Initial graph has the node with the maximum centrality/random node - d3/Viva
+1.1 Single click on one node displays a picture (got from wikia, random picture of a guy/girl based on gender if pic doesnt exist), and gives an option on the top - Recommendations
+1.1.1 Clicking recommendations goes to a different page which has  the recommended storylines (from wikia or a subset of the comic book series in which both appear in)
+1.2 Double click makes that the center of your graph so that you can zoom in and see characters related to it, for exploration
+
+2, you can search for characters in the search box and filter the graph based on the search - At no point we show the entire huge graph, just a subset for a random character.
+
+For recommendations we use LSA to represent the feature, and use KNN with the cosine similarity or euclidean distance as the distance measure. 
+
+We precompute the similarity score between each character before the graph is generated, and we use that for recommended storylines calculation as well as one of the feature. 
+PROBLEM that we need to figure out is with how many comic book series/characters should we compare the similarity with to get the list of recommendations. DOing it across the set of the 
+
+
+

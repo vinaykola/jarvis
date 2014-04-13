@@ -9,10 +9,11 @@ nodes = []
 char_to_node_mapping = {}
 edges = []
 
+num = 0
 with open(filename) as fil:
     for line in fil:
         n1,n2,pol = line.rstrip().split('\t')
-        
+        pol = int(pol)
         # Put nodes in the format for neo4j
         node1 = {}
         node1['name'] = n1
@@ -24,7 +25,6 @@ with open(filename) as fil:
 
         edges.append((n1,n2,pol))
         edges.append((n2,n1,pol))
-        
         
 # Make the list of nodes unique
 nodes = {node1['name']:node1 for node1 in nodes}.values() 
@@ -38,7 +38,6 @@ neo4j_edges = []
 
 # Put edges in the correct format for neo4j
 for n1,n2,pol in edges:
-
     try:
         if pol == 1:
             neo4j_edges.append((char_to_node_mapping[n1],"FRIEND",char_to_node_mapping[n2]))
@@ -47,38 +46,33 @@ for n1,n2,pol in edges:
     except:
         print "error"
 
-#print nodes[:10]
-#print
-#print neo4j_edges[:10]x
+#print "neo4j edges"
+#for word in neo4j_edges:
+ #   print word
 
+neo4j._add_header('X-Stream', 'true;format=pretty')
 characters_db1 = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
 characters_db1.clear()
 batch = neo4j.WriteBatch(characters_db1)
 listOfNodeReferences = defaultdict()
 temp = ""
 num = 0
-#a1 = batch.create(node(name="Superman"))
-#a2 = batch.create(node(name="Batman"))
 
-#rel(a1, "PLAYS", a2),
 
 for word in nodes:
     temp = batch.create(node(word))
     listOfNodeReferences[num] = temp
     num+=1
-
 for word in neo4j_edges:
- #   print listOfNodeReferences[word[0]],word[1],listOfNodeReferences[word[2]]
     batch.create(rel(listOfNodeReferences[word[0]], word[1], listOfNodeReferences[word[2]]))
 
-try:
-    results = batch.submit()
-except:
-    print "Encountered exception"
+
+results = batch.submit()
 file1 = open("output.txt","w")
-file1.write(results)
+a = list()
 for word in results:
-    file1.write(word["name"])
+    file1.write(str(word['name']) + "\n")
+  
 print "Completed"
 
 
