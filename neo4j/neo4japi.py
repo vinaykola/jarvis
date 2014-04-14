@@ -21,7 +21,7 @@ def getRelType(unicodeString):
 #Return - dictionary - (startnode,endnode) - relationship type
 def getAllNodesAndRelations():
 	db1 = GraphDatabase("http://localhost:7474/db/data/")
-	q = '''START n=node(*) MATCH n-[r]->m RETURN n,r,m LIMIT 5'''
+	q = '''START n=node(*) MATCH n-[r]->m RETURN n,r,m'''
 	results = db1.query(q,returns=(client.Node, unicode, client.Relationship))
 	print len(results)
 	graph = defaultdict()
@@ -65,7 +65,7 @@ def getAllNodes():
 #Returns - all the friends as a list
 def getFriends(name):
 	db1 = GraphDatabase("http://localhost:7474/db/data/")
-	q = '''MATCH (n { name: \''''+name+'''\'})-[r]->m WHERE type(r) = 'FRIEND' RETURN n,r,m LIMIT 5'''
+	q = '''MATCH (n { name: \''''+name+'''\'})-[r]->m WHERE type(r) = 'FRIEND' RETURN n,r,m'''
 	results = db1.query(q,returns=(client.Node, unicode, client.Relationship))
 	endnode = []
 	for i in xrange(len(results)):
@@ -81,7 +81,7 @@ def getFriends(name):
 #Returns - all the foes as a list
 def getFoes(name):
 	db1 = GraphDatabase("http://localhost:7474/db/data/")
-	q = '''MATCH (n { name: \''''+name+'''\'})-[r]->m WHERE type(r) = 'FOE' RETURN n,r,m LIMIT 5'''
+	q = '''MATCH (n { name: \''''+name+'''\'})-[r]->m WHERE type(r) = 'FOE' RETURN n,r,m'''
 	results = db1.query(q,returns=(client.Node, unicode, client.Relationship))
 	endnode = []
 	for i in xrange(len(results)):
@@ -97,7 +97,7 @@ def getFoes(name):
 #Returns - list of tuples of nodes connected by that relationship type
 def getAllRelationshipsOfType(type):
 	db1 = GraphDatabase("http://localhost:7474/db/data/")
-	q = '''START n=node(*) MATCH n-[r]->m WHERE type(r) = \''''+type.upper()+'''\'RETURN n,r,m LIMIT 5'''
+	q = '''START n=node(*) MATCH n-[r]->m WHERE type(r) = \''''+type.upper()+'''\'RETURN n,r,m'''
 	results = db1.query(q,returns=(client.Node, unicode, client.Relationship))
 	print len(results)
 	nodes = []
@@ -122,7 +122,7 @@ def getAllRelationshipsOfType(type):
 #Returns - type of the relationship as a string.
 def getRelationship(name1,name2):
 	db1 = GraphDatabase("http://localhost:7474/db/data/")
-	q = '''MATCH (n { name: \''''+name1+'''\'})-[r]->(m { name: \''''+name2+'''\'}) RETURN n,r,m LIMIT 5'''
+	q = '''MATCH (n { name: \''''+name1+'''\'})-[r]->(m { name: \''''+name2+'''\'}) RETURN n,r,m'''
 	results = db1.query(q,returns=(client.Node, unicode, client.Relationship))
 	rel = []
 	for i in xrange(len(results)):
@@ -142,7 +142,7 @@ def getRelationship(name1,name2):
 #Returns - all the characters connected to that character at that depth as a list.
 def getAllNodesOfDepth(name,num):
 	db1 = GraphDatabase("http://localhost:7474/db/data/")
-	q = '''MATCH (n { name: \''''+name+'''\'})-[*'''+str(num)+''']->m RETURN m LIMIT 5'''
+	q = '''MATCH (n { name: \''''+name+'''\'})-[*'''+str(num)+''']->m RETURN m'''
 	results = db1.query(q,returns=(client.Node, unicode, client.Relationship))
 	endnode = []
 	for i in xrange(len(results)):
