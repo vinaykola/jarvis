@@ -53,11 +53,6 @@ for n1,n2,pol in edges:
 neo4j._add_header('X-Stream', 'true;format=pretty')
 characters_db1 = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
 characters_db1.clear()
-batch = neo4j.WriteBatch(characters_db1)
-listOfNodeReferences = defaultdict()
-temp = ""
-num = 0
-
 
 for word in nodes:
     temp = batch.create(node(word))
