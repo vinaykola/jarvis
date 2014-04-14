@@ -79,13 +79,13 @@ class characterAPI:
 	# 	return self.featuresDictionary["results"]["story_arc_credits"]
 
 	def get_teams(self):
-	 	return self.featuresDictionary["results"]["teams"]
+	 	return map( lambda x: (x['name'], x['api_detail_url']), self.featuresDictionary["results"]["teams"])
 
 	def get_team_enemies(self):
-	 	return self.featuresDictionary["results"]["team_enemies"]
+        return map( lambda x: (x['name'], x['api_detail_url']), self.featuresDictionary["results"]["team_enemies"])
 
 	def get_team_friends(self):
-		return self.featuresDictionary["results"]["team_friends"]
+        return map( lambda x: (x['name'], x['api_detail_url']), self.featuresDictionary["results"]["team_friends"])
 
 
    
