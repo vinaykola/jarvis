@@ -81,5 +81,8 @@ class characterAPI:
 
     def get_team_enemies(self):
         return map( lambda x: (x['name'], x['api_detail_url']), self.featuresDictionary['results']['team_enemies'])
+        
+    def get_team_friends(self):
+        return map( lambda x: (x['name'], x['api_detail_url']), self.featuresDictionary['results']['team_friends'])
 
    
