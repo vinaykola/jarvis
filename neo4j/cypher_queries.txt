@@ -1,0 +1,2 @@
+MATCH (x { name: 'xenon' })-[r]-(friend) RETURN x,r,friend  -  For returning all the node-edge-node relationships for xenon
+MATCH (x { name: 'xenon' })-[r]-(friend) WHERE type(r) = 'FOE' RETURN x,r,friend #Returns all foes for xenon
