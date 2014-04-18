@@ -15,6 +15,6 @@ for hero in list_of_heroes:
 		print '\n'+header.text
 		for item in header.findNextSiblings()[0].findAll('li'):
 			print item.a.text
-
+print "done"
 #soup.findAll('h2')[0].findNextSiblings()[0].findAll('li')[0].a.text
 
