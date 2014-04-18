@@ -5,11 +5,15 @@ class characterAPI:
     def __init__(self,name):
         self.superheroname = name
         self.featuresDictionary = defaultdict()
-    
+
     # Possibly add "story_arc_credits" and "volume_credits"
     def setupFeatures(self):
         base = util("characters",["aliases","birth","character_enemies","character_friends","count_of_issue_appearances","creators","description","gender","id","image","issue_credits","issues_died_in","powers","real_name","movies","name","origin","publisher","teams","team_enemies","team_friends"])#,"story_arc_credits"])
         self.featuresDictionary = base.getFeatures(self.superheroname)
+
+    def setUpFeaturesURL(self,url):
+        base = util("characters",["aliases","birth","character_enemies","character_friends","count_of_issue_appearances","creators","description","gender","id","image","issue_credits","issues_died_in","powers","real_name","movies","name","origin","publisher","teams","team_enemies","team_friends"])#,"story_arc_credits"])
+        self.featuresDictionary = base.getURLFeatures(url)
 
     def get_aliases (self):
         a = self.featuresDictionary["results"]["aliases"]
@@ -36,7 +40,7 @@ class characterAPI:
 
     def get_image(self):
         return self.featuresDictionary["results"]["image"]
-        
+
     def get_count_of_issue_appearances (self):
         a = self.featuresDictionary["results"]["count_of_issue_appearances"]
         return a
@@ -56,7 +60,7 @@ class characterAPI:
 
     def get_origin(self):
         a = self.featuresDictionary["results"]["origin"]
-        return a        
+        return a
 
     def get_enemies (self):
         enemies = map (lambda x:(x["name"], x["api_detail_url"]), self.featuresDictionary["results"]["character_enemies"])
@@ -81,8 +85,8 @@ class characterAPI:
 
     def get_team_enemies(self):
         return map( lambda x: (x['name'], x['api_detail_url']), self.featuresDictionary['results']['team_enemies'])
-        
+
     def get_team_friends(self):
         return map( lambda x: (x['name'], x['api_detail_url']), self.featuresDictionary['results']['team_friends'])
 
-   
+
