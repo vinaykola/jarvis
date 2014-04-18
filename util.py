@@ -21,6 +21,13 @@ class util:
         dataForCharacter = self.get_json_response(urlForCharacter)
         return dataForCharacter
 
+    def getURLFeatures(self,url):
+        json_data = self.get_json_response (url)
+        relevantUrl = self.get_character_url (json_data)
+        urlForCharacter = self.get_char_url_generator_specific(relevantUrl)
+        dataForCharacter = self.get_json_response(urlForCharacter)
+        return dataForCharacter
+
     def extractFeatureNames(self,dataForCharacter,featureName):
         names = map (lambda x:(x["name"], x["api_detail_url"]), dataForCharacter["results"][featureName])
         return names
