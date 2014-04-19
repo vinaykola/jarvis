@@ -1,14 +1,17 @@
-var jarvisHome = angular.module('jarvisHome',[]);
+var jarvisHome = angular.module('jarvisHome',['ui.bootstrap']);
 
 
 jarvisHome.controller('mainController', function($scope,$http) {
-  $scope.name = 'World';
 
   $http.get('/js/subgraph.json')
        .then(function(res){
           $scope.graphData = res.data;        
+          $scope.nodes = $scope.graphData.nodes;
+          console.log($scope.nodes);
         });
 });
+
+
 
 
 jarvisHome.directive('d3Graph', function() 
@@ -46,7 +49,7 @@ jarvisHome.directive('d3Graph', function()
       //Try playing with the charge and link distance
       var force = d3.layout.force()
           .gravity(0.05)
-          .charge(-200)
+          .charge(-100)
           .linkDistance(100)
           .size([WIDTH, HEIGHT]);
 
