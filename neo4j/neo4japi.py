@@ -7,6 +7,7 @@ from neo4jrestclient import client
 from neo4jrestclient.client import GraphDatabase
 from collections import defaultdict
 import json
+import ast
 
 #Utility method - Not to be used in the api
 def getRelType(unicodeString):
@@ -142,16 +143,43 @@ def getRelationship(name1,name2):
 #Returns - all the characters connected to that character at that depth as a list.
 def getAllNodesOfDepth(name,num):
 	db1 = GraphDatabase("http://localhost:7474/db/data/")
-	q = '''MATCH (n { name: \''''+name+'''\'})-[*'''+str(num)+''']->m RETURN m'''
-	results = db1.query(q,returns=(client.Node, unicode, client.Relationship))
+	q = '''MATCH p = (n { name: \''''+name+'''\'})-[r*'''+str(num)+''']->m RETURN p,r'''
+	results = db1.query(q,returns=(unicode,unicode))
+	graph = []
 	endnode = []
+	startnode = []
+        endnode = []
+	midnode = []
+	rel = []
 	for i in xrange(len(results)):
 		for word in results[i]:
-			endnode.append(str(word.properties['name']))
-
-	for i in xrange(len(endnode)):
-		print endnode[i]
-	return endnode
+			if word.__class__.__name__ == 'unicode':
+				json1_str = str(word)
+				if json1_str.startswith('['):
+					a = getRelType(json1_str)
+					b = getRelType(json1_str.split("}, {")[1])
+					rel.append((a,b))
+				else:
+					json1_str = json1_str.replace('u','')
+					dictstr = ast.literal_eval(json1_str)
+					for word2 in dictstr:
+						if word2 == 'relationships':
+							for i in xrange(len(dictstr[word2])):
+								relation = client.Relationship(dictstr[word2][i])
+						if word2 == 'start':
+							startn = client.Node(dictstr[word2])
+							startnode.append(str(startn.properties['name']))
+						if word2 == 'end':
+							endn = client.Node(dictstr[word2])
+							endnode.append(str(endn.properties['name']))
+						if word2 == 'nodes':
+							midn = client.Node(dictstr[word2][1])
+							midnode.append(str(midn.properties['name']))			       
+	for i in xrange(len(startnode)):
+		graph.append([startnode[i],rel[i][0],midnode[i],rel[i][1],endnode[i]])
+	for word in graph:
+		print word
+	return graph
 
 #Usage
 '''
@@ -159,5 +187,5 @@ getFriends('superman')
 getFoes('superman')
 getAllRelationshipsOfType('friend')
 getRelationship('superman','wonder woman')
-getAllNodesOfDepth('superman',2)
 '''
+getAllNodesOfDepth('superman',2)
