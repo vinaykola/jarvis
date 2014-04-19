@@ -155,17 +155,14 @@ def getAllNodesOfDepth(name,num):
 		for word in results[i]:
 			if word.__class__.__name__ == 'unicode':
 				json1_str = str(word)
-				if json1_str.startswith('['):
+				if json1_str.startswith('['):                    #get relationships
 					a = getRelType(json1_str)
 					b = getRelType(json1_str.split("}, {")[1])
 					rel.append((a,b))
-				else:
+				else:                                           #get nodes
 					json1_str = json1_str.replace('u','')
 					dictstr = ast.literal_eval(json1_str)
 					for word2 in dictstr:
-						if word2 == 'relationships':
-							for i in xrange(len(dictstr[word2])):
-								relation = client.Relationship(dictstr[word2][i])
 						if word2 == 'start':
 							startn = client.Node(dictstr[word2])
 							startnode.append(str(startn.properties['name']))
@@ -174,7 +171,7 @@ def getAllNodesOfDepth(name,num):
 							endnode.append(str(endn.properties['name']))
 						if word2 == 'nodes':
 							midn = client.Node(dictstr[word2][1])
-							midnode.append(str(midn.properties['name']))			       
+							midnode.append(str(midn.properties['name']))
 	for i in xrange(len(startnode)):
 		graph.append([startnode[i],rel[i][0],midnode[i],rel[i][1],endnode[i]])
 	for word in graph:
