@@ -4,11 +4,12 @@
 	var express  = require('express');
 	var app      = express(); 								// create our app w/ express
 	var port  	 = process.env.PORT || 8080; 				// set the port
-	var neo4j = require('node-neo4j');
+	var neo4j = require('neo4j');
+	var db = new neo4j.GraphDatabase('http://localhost:7474');
+
 
 	// configuration ===============================================================
 	//Connect to Neo4j here
-
 
 	app.configure(function() {
 		app.use(express.static(__dirname + '/app/public')); 	// set the static files location /public/img will be /img for users
@@ -18,7 +19,7 @@
 	});
 
 	// routes ======================================================================
-	require('./app/routes.js')(app);
+	require('./app/routes.js')(app,neo4j);
 
 	// listen (start app with node server.js) ======================================
 	app.listen(port);

@@ -148,9 +148,10 @@ def getAllNodesOfDepth(name,num):
 	graph = []
 	endnode = []
 	startnode = []
-        endnode = []
+	endnode = []
 	midnode = []
 	rel = []
+	print "got results"
 	for i in xrange(len(results)):
 		for word in results[i]:
 			if word.__class__.__name__ == 'unicode':
