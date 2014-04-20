@@ -25,6 +25,7 @@
 	        box-shadow: 0 8px 6px -6px black;
 	    }
 	    .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+	    .click { cursor: pointer; cursor: hand; }
 	</style>
 
 	<!-- SPELLS -->
@@ -41,7 +42,7 @@
 </head>
 
 <!-- SET THE CONTROLLER  -->
-<body ng-controller="mainController" >
+<body>
 	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 	   <div class="container">
         <div class="navbar-header">
@@ -50,22 +51,21 @@
       </div>
     </div>
 
-    <div id="comicNetwork" class="container">
-    	<d3-Graph val="graphData" style="position:absolute;z-index:1;">
-    		<table style="position:relative;" >
-    			<tr >
-    			</br>
-    			</tr>
-    			<tr>
-    				<td ng-controller="mainController">
-    					<input class="one-edge-shadow form-control"  type="text" ng-model="selected" typeahead="node.name for node in nodes | filter:$viewValue | limitTo:8"  placeholder="Type Superhero name..." size= 35 />
-    				</td>
-    				<td>
-    					<img src="/img/search.png" height=40 width=40 />
-    				</td>
-    			</tr>
-    		</table>
-    	</d3-Graph>
+    <div id="comicNetwork" class="container" ng-controller="mainController">
+    	<d3-Graph val="graphData" style="position:absolute;z-index:1;"></d3-Graph>
+    		<br>
+    	 	<form  ng-submit="searchChar()">
+	    		<table style="position:relative;" >
+	    			<tr>
+	    				<td >
+	    					<input class="one-edge-shadow form-control"  type="text" ng-model="selected" typeahead="node.name for node in nodes | filter:$viewValue | limitTo:8"  placeholder="Type Superhero name..." size= 35 />
+	    				</td>
+	    				<td>
+	    					<input type="image"  display="block" height=36 width=36  src="/img/search.png"></input>
+	    				</td>
+	    			</tr>
+	    		</table>
+    	</form>
     </div><!-- /.container -->
 </body>
 </html>

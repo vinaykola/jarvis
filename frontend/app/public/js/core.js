@@ -7,10 +7,21 @@ jarvisHome.controller('mainController', function($scope,$http) {
        .then(function(res){
           $scope.graphData = res.data;        
           $scope.nodes = $scope.graphData.nodes;
-          console.log($scope.nodes);
+          console.log($scope.graphData);
+          console.log("Here");
         });
-});
 
+
+  $scope.searchChar = function() 
+  {
+    $http.get('/js/subgraphold.json')
+       .then(function(res){
+          $scope.graphData = res.data;        
+          $scope.nodes = $scope.graphData.nodes;
+          console.log($scope.graphData);
+        });
+  }
+});
 
 
 
@@ -48,9 +59,9 @@ jarvisHome.directive('d3Graph', function()
       //D3 force directed layout
       //Try playing with the charge and link distance
       var force = d3.layout.force()
-          .gravity(0.05)
+          .gravity(0.25)
           .charge(-100)
-          .linkDistance(100)
+          .linkDistance(300)
           .size([WIDTH, HEIGHT]);
 
     return {
@@ -58,23 +69,27 @@ jarvisHome.directive('d3Graph', function()
         scope: { val: '='},
         link: function(scope,element,attrs) 
         {
-          //Watch if the data in val has changed
-            scope.$watch('val', function() 
+            //Watch if the data in val has changed
+            scope.$watch('val', function(newValue,oldValue) 
             {
-              scope.render(scope.val);
-            });
+              console.log("UI");
+              if(newValue)
+                scope.render(newValue);
+            }, true);
 
 
             //Render UI on screen
             scope.render = function(val)
             {
 
-                // If we don't pass any data, return out of the element
-                if (!val) return;
+              if(!val) return;
 
-                var data = val;
-                //console.log(graph.nodes);
+              var data = val;
 
+              console.log("Hello");
+
+              if($("#graph").length > 0)
+               $("#graph").remove();
 
               //Append SVG to the body
               var svg = d3.select("#comicNetwork").append("svg")
@@ -83,6 +98,8 @@ jarvisHome.directive('d3Graph', function()
                         .attr("id","graph")
                         .attr("viewBox", "0 0 " + WIDTH + " " + HEIGHT )
                         .attr("preserveAspectRatio", "xMidYMid meet");
+
+              svg.selectAll("*").remove();
 
 
               // Movie panel: the div into which the movie details info will be written
@@ -125,9 +142,9 @@ jarvisHome.directive('d3Graph', function()
               // nodes: an SVG circle
               var graphNodes = networkGraph.append('svg:g').attr('class','grp gNodes')
                 .selectAll("circle")
-                .data( nodeArray, function(d){return d.name} )
+                .data(nodeArray, function(d){return d.name})
                 .enter().append("svg:circle")
-                .attr('r', 10 )
+                .attr('r', 5 )
                 .call(force.drag)
                 .attr('pointer-events', 'all');
 
