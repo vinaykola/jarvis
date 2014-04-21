@@ -137,7 +137,7 @@ jarvisHome.directive('d3Graph', function()
                 .enter().append("line")
                 .attr("class", "link")
                 .style("stroke", function(d){ return d.type == "FOE" ? "red":"green";})
-                .style("stroke-opacity",2);
+                .style("stroke-opacity",0.5);
 
               // nodes: an SVG circle
               var graphNodes = networkGraph.append('svg:g').attr('class','grp gNodes')

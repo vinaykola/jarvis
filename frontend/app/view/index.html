@@ -51,21 +51,23 @@
       </div>
     </div>
 
-    <div id="comicNetwork" class="container" ng-controller="mainController">
-    	<d3-Graph val="graphData" style="position:absolute;z-index:1;"></d3-Graph>
-    		<br>
-    	 	<form  ng-submit="searchChar()">
-	    		<table style="position:relative;" >
+    <div id="comicNetwork"  class="container" ng-controller="mainController" style="position:absolute;z-index:1;">
+    	<d3-Graph style="position:absolute;z-index:1;" val="graphData" ></d3-Graph>
+    	 	<form  ng-submit="searchChar()" style="position:absolute;z-index:2">
+	    		<table >
+	    			<tr>
+	    				<br>
+	    			</tr>
 	    			<tr>
 	    				<td >
-	    					<input class="one-edge-shadow form-control"  type="text" ng-model="selected" typeahead="node.name for node in nodes | filter:$viewValue | limitTo:8"  placeholder="Type Superhero name..." size= 35 />
+	    					<input class="form-control"  type="text" ng-model="selected" typeahead="node.name for node in nodes | filter:$viewValue | limitTo:8"  placeholder="Type Superhero name..." size= 35 />
 	    				</td>
 	    				<td>
 	    					<input type="image"  display="block" height=36 width=36  src="/img/search.png"></input>
 	    				</td>
 	    			</tr>
 	    		</table>
-    	</form>
+    		</form>
     </div><!-- /.container -->
 </body>
 </html>
