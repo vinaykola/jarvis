@@ -39,6 +39,7 @@ class util:
         format_string = "format" + "=" + "json"
         suffix_url = "&".join ([api_key, filter_string, format_string])
         query_url = base_url + "?" + suffix_url
+        print query_url
         return query_url
 
     def get_json_response (self,url):

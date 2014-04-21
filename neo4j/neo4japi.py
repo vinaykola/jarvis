@@ -179,6 +179,11 @@ def getAllNodesOfDepth(name,num):
 		print word
 	return graph
 
+def updateRelationshipType(name,propertytochange,newvalue):
+	db1 = GraphDatabase("http://localhost:7474/db/data/")
+	q = '''MATCH (n {name: \''''+name+'''\'}) SET n.'''+propertytochange+''' = \''''+newvalue+'''\' RETURN n'''
+	results = db1.query(q)
+
 #Usage
 '''
 getFriends('superman')
