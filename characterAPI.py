@@ -11,7 +11,7 @@ class characterAPI:
         base = util("characters",["aliases","birth","character_enemies","character_friends","count_of_issue_appearances","creators","description","gender","id","image","issue_credits","issues_died_in","powers","real_name","movies","name","origin","publisher","teams","team_enemies","team_friends"])#,"story_arc_credits"])
         self.featuresDictionary = base.getFeatures(self.superheroname)
 
-    def setupFeatures(self,url):
+    def setUpFeatures(self,url):
         base = util("characters",["aliases","birth","character_enemies","character_friends","count_of_issue_appearances","creators","description","gender","id","image","issue_credits","issues_died_in","powers","real_name","movies","name","origin","publisher","teams","team_enemies","team_friends"])#,"story_arc_credits"])
         self.featuresDictionary = base.getURLFeatures(url)
 

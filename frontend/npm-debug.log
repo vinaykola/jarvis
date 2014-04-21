@@ -1,0 +1,112 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/Cellar/node/0.10.26/bin/node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'install' ]
+2 info using npm@1.4.3
+3 info using node@v0.10.26
+4 warn package.json jarvis@0.0.0 No repository field.
+5 warn package.json jarvis@0.0.0 No README data
+6 verbose readDependencies using package.json deps
+7 verbose install where, deps [ '/Users/localadmin/Documents/jarvis/frontend',
+7 verbose install   [ 'express', 'neo4j' ] ]
+8 info preinstall jarvis@0.0.0
+9 verbose readDependencies using package.json deps
+10 verbose already installed skipping express@~3.5.1 /Users/localadmin/Documents/jarvis/frontend
+11 verbose cache add [ 'neo4j@~1.5.0', null ]
+12 verbose cache add name=undefined spec="neo4j@~1.5.0" args=["neo4j@~1.5.0",null]
+13 verbose parsed url { protocol: null,
+13 verbose parsed url   slashes: null,
+13 verbose parsed url   auth: null,
+13 verbose parsed url   host: null,
+13 verbose parsed url   port: null,
+13 verbose parsed url   hostname: null,
+13 verbose parsed url   hash: null,
+13 verbose parsed url   search: null,
+13 verbose parsed url   query: null,
+13 verbose parsed url   pathname: 'neo4j@~1.5.0',
+13 verbose parsed url   path: 'neo4j@~1.5.0',
+13 verbose parsed url   href: 'neo4j@~1.5.0' }
+14 verbose cache add name="neo4j" spec="~1.5.0" args=["neo4j","~1.5.0"]
+15 verbose parsed url { protocol: null,
+15 verbose parsed url   slashes: null,
+15 verbose parsed url   auth: null,
+15 verbose parsed url   host: null,
+15 verbose parsed url   port: null,
+15 verbose parsed url   hostname: null,
+15 verbose parsed url   hash: null,
+15 verbose parsed url   search: null,
+15 verbose parsed url   query: null,
+15 verbose parsed url   pathname: '~1.5.0',
+15 verbose parsed url   path: '~1.5.0',
+15 verbose parsed url   href: '~1.5.0' }
+16 verbose addNamed [ 'neo4j', '~1.5.0' ]
+17 verbose addNamed [ null, '>=1.5.0-0 <1.6.0-0' ]
+18 silly lockFile 43202c2b-neo4j-1-5-0 neo4j@~1.5.0
+19 verbose lock neo4j@~1.5.0 /Users/localadmin/.npm/43202c2b-neo4j-1-5-0.lock
+20 silly addNameRange { name: 'neo4j', range: '>=1.5.0-0 <1.6.0-0', hasData: false }
+21 verbose url raw neo4j
+22 verbose url resolving [ 'https://registry.npmjs.org/', './neo4j' ]
+23 verbose url resolved https://registry.npmjs.org/neo4j
+24 info trying registry request attempt 1 at 01:36:32
+25 verbose etag "AA5WHR5VS0EP6O5N8LSV35Y7B"
+26 http GET https://registry.npmjs.org/neo4j
+27 http 304 https://registry.npmjs.org/neo4j
+28 silly registry.get cb [ 304,
+28 silly registry.get   { date: 'Mon, 14 Apr 2014 05:36:32 GMT',
+28 silly registry.get     server: 'Apache',
+28 silly registry.get     via: '1.1 varnish',
+28 silly registry.get     'last-modified': 'Mon, 14 Apr 2014 05:36:32 GMT',
+28 silly registry.get     'cache-control': 'max-age=1',
+28 silly registry.get     etag: '"AA5WHR5VS0EP6O5N8LSV35Y7B"',
+28 silly registry.get     'x-served-by': 'cache-c31-CHI',
+28 silly registry.get     'x-cache': 'MISS',
+28 silly registry.get     'x-cache-hits': '0',
+28 silly registry.get     'x-timer': 'S1397453792.876237631,VS0,VE102',
+28 silly registry.get     vary: 'Accept',
+28 silly registry.get     'content-length': '0',
+28 silly registry.get     'keep-alive': 'timeout=10, max=50',
+28 silly registry.get     connection: 'Keep-Alive' } ]
+29 verbose etag neo4j from cache
+30 silly addNameRange number 2 { name: 'neo4j', range: '>=1.5.0-0 <1.6.0-0', hasData: true }
+31 silly addNameRange versions [ 'neo4j',
+31 silly addNameRange   [ '0.1.0',
+31 silly addNameRange     '0.2.0',
+31 silly addNameRange     '0.2.1',
+31 silly addNameRange     '0.2.2',
+31 silly addNameRange     '0.2.3',
+31 silly addNameRange     '0.2.4',
+31 silly addNameRange     '0.2.5',
+31 silly addNameRange     '0.2.6',
+31 silly addNameRange     '0.2.7',
+31 silly addNameRange     '0.2.8',
+31 silly addNameRange     '0.2.9',
+31 silly addNameRange     '0.2.10',
+31 silly addNameRange     '0.2.11',
+31 silly addNameRange     '0.2.12',
+31 silly addNameRange     '0.2.13',
+31 silly addNameRange     '0.2.14',
+31 silly addNameRange     '0.2.15',
+31 silly addNameRange     '0.2.16',
+31 silly addNameRange     '0.2.17',
+31 silly addNameRange     '0.2.18',
+31 silly addNameRange     '0.2.19',
+31 silly addNameRange     '0.2.20',
+31 silly addNameRange     '0.2.21',
+31 silly addNameRange     '1.0.0',
+31 silly addNameRange     '1.1.0' ] ]
+32 silly lockFile 43202c2b-neo4j-1-5-0 neo4j@~1.5.0
+33 silly lockFile 43202c2b-neo4j-1-5-0 neo4j@~1.5.0
+34 error notarget No compatible version found: neo4j@'>=1.5.0-0 <1.6.0-0'
+34 error notarget Valid install targets:
+34 error notarget ["0.1.0","0.2.0","0.2.1","0.2.2","0.2.3","0.2.4","0.2.5","0.2.6","0.2.7","0.2.8","0.2.9","0.2.10","0.2.11","0.2.12","0.2.13","0.2.14","0.2.15","0.2.16","0.2.17","0.2.18","0.2.19","0.2.20","0.2.21","1.0.0","1.1.0"]
+34 error notarget
+34 error notarget This is most likely not a problem with npm itself.
+34 error notarget In most cases you or one of your dependencies are requesting
+34 error notarget a package version that doesn't exist.
+35 error System Darwin 13.1.0
+36 error command "/usr/local/Cellar/node/0.10.26/bin/node" "/usr/local/bin/npm" "install"
+37 error cwd /Users/localadmin/Documents/jarvis/frontend
+38 error node -v v0.10.26
+39 error npm -v 1.4.3
+40 error code ETARGET
+41 verbose exit [ 1, true ]

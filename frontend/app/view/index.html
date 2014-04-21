@@ -1,8 +1,8 @@
-<!-- index.html -->
-<!doctype html>
+
+<!DOCTYPE html>
 
 <!-- ASSIGN OUR ANGULAR MODULE -->
-<html ng-app="jarvis">
+<html ng-app="jarvisHome" >
 <head>
 	<!-- META -->
 	<meta charset="utf-8">
@@ -11,41 +11,61 @@
 	<title>J.A.R.V.I.S</title>
 
 	<!-- SCROLLS -->
-	<<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"><!-- load bootstrap css -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"><!-- load bootstrap css -->
+	<link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/angular-snap.css" type="text/css" />
 	<style>
 		html 					{ overflow-y:scroll; }
 		body 					{ padding-top:50px; }
 		#todo-list 				{ margin-bottom:30px; }
+		.one-edge-shadow 
+		{
+			-webkit-box-shadow: 0 8px 6px -6px black;
+	   		-moz-box-shadow: 0 8px 6px -6px black;
+	        box-shadow: 0 8px 6px -6px black;
+	    }
+	    .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+	    .click { cursor: pointer; cursor: hand; }
 	</style>
 
 	<!-- SPELLS -->
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
+	<script src="/js/external/ui-bootstrap-tpls-0.10.0.min.js" type="text/javascript" charset="utf-8" /></script><!-- load angular-snap -->
+	<script src="/js/external/snap.js" type="text/javascript" charset="utf-8" /></script><!-- load angular-snap -->
+	<script src="/js/external/angular-snap.js" type="text/javascript" charset="utf-8" /></script><!-- load angular-snap -->
+	<script src="/js/external/d3.v3.min.js" type="text/javascript" charset="utf-8" /></script><!-- load d3 -->
+	<script src="/js/external/colorbrewer.js" type="text/javascript" charset="utf-8" /></script><!-- load colorBrewer-->
+	<script src="/js/core.js" ></script>
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script><!-- load bootstrap -->
-	<script src="core.js"></script>
 </head>
 
-<!-- SET THE CONTROLLER AND GET ALL TODOS -->
-<body ng-controller="mainController">
+<!-- SET THE CONTROLLER  -->
+<body>
 	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 	   <div class="container">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-          </button>
           <a class="navbar-brand" href="#">J.A.R.V.I.S</a>
         </div>
       </div>
     </div>
 
-    <div class="container">
-
-      <div class="starter-template">
-        <h1>Graph Viz was here</h1>
-        <p class="lead">Graph Viz</p>
-      </div>
-
+    <div id="comicNetwork" class="container" ng-controller="mainController">
+    	<d3-Graph val="graphData" style="position:absolute;z-index:1;"></d3-Graph>
+    		<br>
+    	 	<form  ng-submit="searchChar()">
+	    		<table style="position:relative;" >
+	    			<tr>
+	    				<td >
+	    					<input class="one-edge-shadow form-control"  type="text" ng-model="selected" typeahead="node.name for node in nodes | filter:$viewValue | limitTo:8"  placeholder="Type Superhero name..." size= 35 />
+	    				</td>
+	    				<td>
+	    					<input type="image"  display="block" height=36 width=36  src="/img/search.png"></input>
+	    				</td>
+	    			</tr>
+	    		</table>
+    	</form>
     </div><!-- /.container -->
 </body>
 </html>
