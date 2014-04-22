@@ -7,6 +7,10 @@ module.exports = function(app,neo4j)
 		res.sendfile('./app/view/index.html'); 
 	});
 
+	app.get('/recommend', function(req, res) {
+		res.sendfile('./app/view/recommend.html'); 
+	})
+
     app.get('/api/edges:todo_id',function(req, res) {
       var _id = req.params.todo_id
         var query = [
