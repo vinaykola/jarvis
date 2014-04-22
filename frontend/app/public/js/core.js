@@ -3,21 +3,27 @@ var jarvisHome = angular.module('jarvisHome',['ui.bootstrap']);
 
 jarvisHome.controller('mainController', function($scope,$http) {
 
-  $http.get('/js/subgraph.json')
+  $http.get('/api/allnodes')
+       .then(function(res){     
+          $scope.nodes = res.data;
+          console.log($scope.nodes);
+          console.log("noobs");
+        });
+
+  $http.get('/js/temp.json')
        .then(function(res){
           $scope.graphData = res.data;        
-          $scope.nodes = $scope.graphData.nodes;
           console.log($scope.graphData);
-          console.log("Here");
+          console.log("todos");
         });
 
 
   $scope.searchChar = function() 
   {
-    $http.get('/js/subgraphold.json')
+    console.log($scope.selected);
+    $http.get('/api/edges:' + $scope.selected)
        .then(function(res){
-          $scope.graphData = res.data;        
-          $scope.nodes = $scope.graphData.nodes;
+          $scope.graphData = res.data;
           console.log($scope.graphData);
         });
   }
@@ -86,8 +92,6 @@ jarvisHome.directive('d3Graph', function()
 
               var data = val;
 
-              console.log("Hello");
-
               if($("#graph").length > 0)
                $("#graph").remove();
 
@@ -101,20 +105,42 @@ jarvisHome.directive('d3Graph', function()
 
               svg.selectAll("*").remove();
 
+              function findIndexByKeyValue(obj, key, value)
+              {
+                  for (var i = 0; i < obj.length; i++) {
+                      if (obj[i][key] == value) {
+                          return i;
+                      }
+                  }
+                  return -1;
+              }
+
 
               // Movie panel: the div into which the movie details info will be written
               //movieInfoDiv = d3.select("#movieInfo");
 
-
+              var links = data.links;
               var nodeArray = data.nodes;
-              var linkArray = data.links;
+              var linkArray = [];
+
+              //Compute the distinct nodes from the links.
+              links.forEach(function(link,i) 
+              {
+                  console.log(i); 
+                  linkArray[i] = new Object();
+                  linkArray[i].source = findIndexByKeyValue(nodeArray,"name",link.source);
+                  linkArray[i].target = findIndexByKeyValue(nodeArray,"name",link.target);
+                  linkArray[i].type = link.type;
+              });
+
+              console.log(nodeArray);
+              console.log(linkArray);
 
               // Add the node & link arrays to the layout, and start it
               force
                 .nodes(nodeArray)
                 .links(linkArray)
                 .start();
-
 
                /* Add drag & zoom behaviours */
               svg.call( d3.behavior.drag()
@@ -135,37 +161,39 @@ jarvisHome.directive('d3Graph', function()
                 .selectAll("line")
                 .data(linkArray)
                 .enter().append("line")
-                .attr("class", "link")
-                .style("stroke", function(d){ return d.type == "FOE" ? "red":"green";})
-                .style("stroke-opacity",0.5);
+                .attr("class", "link");
 
               // nodes: an SVG circle
               var graphNodes = networkGraph.append('svg:g').attr('class','grp gNodes')
                 .selectAll("circle")
-                .data(nodeArray, function(d){return d.name})
+                .data(force.nodes())
                 .enter().append("svg:circle")
-                .attr('r', 5 )
-                .call(force.drag)
+                .attr('r', 10)
                 .attr('pointer-events', 'all');
 
               graphNodes.append("title")
               .attr("x", 19)
               .attr("dy", ".31em")
-              //uncomment for coloured labels
-              //.style("fill", function(d) { return color(d.group); })
-              .style("fill", "#ffffff")
               .text(function(d) 
               {
-                  return d.name 
+                  return d.name;
               });
 
 
               // labels: a group with two SVG text: a title and a shadow (as background)
               var graphLabels = networkGraph.append('svg:g').attr('class','grp gLabel')
                 .selectAll("g.label")
-                .data( nodeArray, function(d){return d.name} )
+                .data(nodeArray, function(d){return d.name} )
                 .enter().append("svg:g")
                 .attr('class','label');
+
+              labels = graphLabels.append('svg:text')
+                        .attr('x','-3em')
+                        .attr('y','-1em')
+                        .attr('pointer-events', 'none') // they go to the circle beneath
+                        .attr('id', function(d) { return "lf" + d.index; } )
+                        .attr('class','nlabel')
+                        .text( function(d) { return d.name; } );
 
 
               force.on("tick", function() 
@@ -211,11 +239,28 @@ jarvisHome.directive('d3Graph', function()
 
                     // move edges
                 e = doTr ? graphLinks.transition().duration(500) : graphLinks;
-          
-                e.attr("x1", function(d) { return z*(d.source.x); })
-                  .attr("y1", function(d) { return z*(d.source.y); })
-                  .attr("x2", function(d) { return z*(d.target.x); })
-                  .attr("y2", function(d) { return z*(d.target.y); });
+
+                // e.attr("d",function(d)
+                // {
+                //   var z = 1;
+                //   var dx = z*(d.target.x - d.source.x);
+                //   var dy = z*(d.target.y - d.source.y);
+                //   var dr = Math.sqrt(dx*dx + dy*dy);
+
+                //   return "M" + 
+                //           z*d.source.x + "," + 
+                //           z*d.source.y + "A" + 
+                //           dr + "," + dr + " 0 0,1 " + 
+                //           z*d.target.x + "," + 
+                //           z*d.target.y;
+                // });
+
+              e
+                .attr("x1", function(d) { return z*(d.source.x); })
+                .attr("y1", function(d) { return z*(d.source.y); })
+                .attr("x2", function(d) { return z*(d.target.x); })
+                .attr("y2", function(d) { return z*(d.target.y); });
+            
 
                 // move nodes
                 n = doTr ? graphNodes.transition().duration(500) : graphNodes;

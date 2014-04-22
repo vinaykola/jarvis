@@ -1,0 +1,1 @@
+{"nodes": [{"name":"batman","id":1,"url":"abc"},{"name":"joker","id":2,"url":"efg"},{"name":"superman","id":3,"url":"efg"}],"links": [{"source": "batman", "type": "FOE", "target": "joker"},{"source": "batman", "type": "FRIEND", "target": "superman"},{"source": "superman", "type": "FOE", "target": "joker"}]}
