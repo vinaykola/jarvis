@@ -101,9 +101,15 @@ jarvisHome.directive('d3Graph', function()
                         .attr("height", HEIGHT)
                         .attr("id","graph")
                         .attr("viewBox", "0 0 " + WIDTH + " " + HEIGHT )
-                        .attr("preserveAspectRatio", "xMidYMid meet");
+                        .attr("preserveAspectRatio", "xMidYMid meet")
+                        .attr("class","parent");
 
-              svg.selectAll("*").remove();
+
+              var node = svg.selectAll(".node"),
+                  link = svg.selectAll(".link"),
+                  label = svg.selectAll(".label");
+
+              //svg.selectAll("*").remove();
 
               function findIndexByKeyValue(obj, key, value)
               {
@@ -115,63 +121,153 @@ jarvisHome.directive('d3Graph', function()
                   return -1;
               }
 
+              function findObjectByKeyValue(obj, key, value)
+              {
+                  for (var i = 0; i < obj.length; i++) {
+                      if (obj[i][key] == value) {
+                          return obj;
+                      }
+                  }
+                  return null;
+              }
+
 
               // Movie panel: the div into which the movie details info will be written
               //movieInfoDiv = d3.select("#movieInfo");
 
               var links = data.links;
-              var nodeArray = data.nodes;
+              var nodes = data.nodes;
+              var nodeArray = [];
               var linkArray = [];
-
-              //Compute the distinct nodes from the links.
-              links.forEach(function(link,i) 
-              {
-                  console.log(i); 
-                  linkArray[i] = new Object();
-                  linkArray[i].source = findIndexByKeyValue(nodeArray,"name",link.source);
-                  linkArray[i].target = findIndexByKeyValue(nodeArray,"name",link.target);
-                  linkArray[i].type = link.type;
-              });
-
-              console.log(nodeArray);
-              console.log(linkArray);
+              var currentLinks = [];
 
               // Add the node & link arrays to the layout, and start it
               force
                 .nodes(nodeArray)
                 .links(linkArray)
-                .start();
+                .on("tick", tick);
 
                /* Add drag & zoom behaviours */
               svg.call( d3.behavior.drag()
                   .on("drag",dragmove) );
 
-              svg.call( d3.behavior.zoom()
+              svg.call( d3.behavior.zoom() 
                   .x(xScale)
                   .y(yScale)
                   .scaleExtent([1, 6])
-                  .on("zoom", doZoom) );
+                  .on("zoom", doZoom)
+                  );
+              svg.on("dblclick.zoom", null);
 
 
-              var networkGraph = svg.append('svg:g').attr('class','grpParent');
+              //var networkGraph = svg.append('svg:g').attr('class','grpParent');
 
 
                // links: simple lines
-              var graphLinks = networkGraph.append('svg:g').attr('class','grp gLinks')
-                .selectAll("line")
-                .data(linkArray)
-                .enter().append("line")
-                .attr("class", "link");
+              //var graphLinks = networkGraph.append('svg:g').attr('class','grp gLinks');
+              //   .selectAll("line")
+              //   .data(linkArray)
+              //   .enter().append("line")
+              //   .attr("class", "link");
 
-              // nodes: an SVG circle
-              var graphNodes = networkGraph.append('svg:g').attr('class','grp gNodes')
-                .selectAll("circle")
-                .data(force.nodes())
-                .enter().append("svg:circle")
-                .attr('r', 10)
-                .attr('pointer-events', 'all');
+              // // nodes: an SVG circle
+              //var graphNodes = networkGraph.append('svg:g').attr('class','grp gNodes');
+              //   .selectAll("circle")
+              //   .data(force.nodes())
+              //   .enter().append("svg:circle")
+              //   .attr("class",function(d) { return "node " + d.name; })
+              //   .attr('r', 10)
+              //   .attr('pointer-events', 'all')
+              //   .on("dblclick",addNodes);
 
-              graphNodes.append("title")
+
+              // graphNodes.append("title")
+              // .attr("x", 19)
+              // .attr("dy", ".31em")
+              // .text(function(d) 
+              // {
+              //     return d.name;
+              // });
+
+
+              // labels: a group with two SVG text: a title and a shadow (as background)
+              //var graphLabels = networkGraph.append('svg:g').attr('class','grp gLabel');
+              //   .selectAll("g.label")
+              //   .data(nodeArray, function(d){return d.name} )
+              //   .enter().append("svg:g")
+              //   .attr('class','label');
+
+              // labels = graphLabels.append('svg:text')
+              //           .attr('x','-3em')
+              //           .attr('y','-1em')
+              //           .attr('pointer-events', 'none') // they go to the circle beneath
+              //           .attr('id', function(d) { return "lf" + d.index; } )
+              //           .attr('class','nlabel')
+              //           .text( function(d) { return d.name; } );
+
+
+            addNodes(nodes,links);
+
+
+            function getNewNodes()
+            {
+              nodes = [{name:"scarecrow",id:4,url:"mno"}];
+              links = [{source: "scarecrow", target: "batman",type:"FOE", "id":4}, {source: "scarecrow", target: "superman",type:"FOE", "id":5}
+                      ,{source: "scarecrow", target: "joker",type:"FRIEND", "id":6}];
+              addNodes(nodes,links);
+            }
+
+
+            function addNodes(nodes,links)
+            {
+              var i=0,j=0;
+              nodes.forEach(function(nodeData)
+              {
+                if(findIndexByKeyValue(nodeArray,"name",nodeData.name) == -1)
+                  nodeArray.push(nodeData);
+                  i++;
+              });
+              console.log(nodeArray);
+              console.log(links);
+              console.log(currentLinks);
+
+              for(i=0;i<links.length;i++)
+              {
+                console.log("Index");
+                console.log(currentLinks.indexOf(links[i].id));
+                if(currentLinks.indexOf(links[i].id) == -1)
+                {
+                  var temp = {};
+                  temp.source = nodeArray[findIndexByKeyValue(nodeArray,"name",links[i].source)];
+                  temp.target = nodeArray[findIndexByKeyValue(nodeArray,"name",links[i].target)];
+                  temp.type = links[i].type;
+                  temp.id = links[i].id;
+                  linkArray.push(temp);
+                  currentLinks.push(temp.id);
+                  j++;
+                }
+              }
+
+              if(i >0 || j > 0)
+                console.log("Start");
+                start();
+            }
+
+            function start() 
+            {
+              console.log("1");
+              link = link.data(force.links(), function(d) { return d.source.name + '-' + d.target.name; });
+              link.enter().insert("line", ".node").attr("class", "link");
+              link.exit().remove();
+              
+              console.log("2");
+              node = node.data(force.nodes(), function(d) { return d.name; });
+              node.enter().append("circle").attr("r", 10)
+              .attr('pointer-events', 'all')
+              .attr("class",function(d) { return "node " + d.name; })
+              .on("dblclick",getNewNodes);
+
+              node.append("title")
               .attr("x", 19)
               .attr("dy", ".31em")
               .text(function(d) 
@@ -180,26 +276,27 @@ jarvisHome.directive('d3Graph', function()
               });
 
 
-              // labels: a group with two SVG text: a title and a shadow (as background)
-              var graphLabels = networkGraph.append('svg:g').attr('class','grp gLabel')
-                .selectAll("g.label")
-                .data(nodeArray, function(d){return d.name} )
-                .enter().append("svg:g")
-                .attr('class','label');
+              node.exit().remove();
+              console.log("3");
 
-              labels = graphLabels.append('svg:text')
-                        .attr('x','-3em')
-                        .attr('y','-1em')
-                        .attr('pointer-events', 'none') // they go to the circle beneath
-                        .attr('id', function(d) { return "lf" + d.index; } )
-                        .attr('class','nlabel')
-                        .text( function(d) { return d.name; } );
+              label = label.data(force.nodes(), function(d) { return d.name; });
+              label.enter().append('svg:text')
+              .attr('x','-3em')
+              .attr('y','-1em')
+              .attr('pointer-events', 'none') // they go to the circle beneath
+              .attr('id', function(d) { return "lf" + d.index; } )
+              .attr('class','label')
+              .text( function(d) { return d.name; } );
+
+              force.start();
+              console.log("4");              
+            }
 
 
-              force.on("tick", function() 
-                {
+              function tick() 
+              {
                   repositionGraph(undefined,undefined,'tick');
-                });
+              }
 
               /* --------------------------------------------------------------------- */
               /* Move all graph elements to its new positions. Triggered:
@@ -211,15 +308,15 @@ jarvisHome.directive('d3Graph', function()
               */
               function repositionGraph( off, z, mode ) 
               {
-                console.log( "REPOS: off="+off, "zoom="+z, "mode="+mode );
-
+                //console.log( "REPOS: off="+off, "zoom="+z, "mode="+mode );
+                console.log(5); 
                 // do we want to do a transition?
                 var doTr = (mode == 'move');
 
                 // drag: translate to new offset
                 if( off !== undefined && (off.x != currentOffset.x || off.y != currentOffset.y ) ) 
                 {
-                  g = d3.select('g.grpParent')
+                  g = d3.select('.parent')
                   if( doTr )
                     g = g.transition().duration(500);
                   g.attr("transform", function(d) { return "translate("+off.x+","+off.y+")" } );
@@ -238,37 +335,22 @@ jarvisHome.directive('d3Graph', function()
                   currentZoom = z;
 
                     // move edges
-                e = doTr ? graphLinks.transition().duration(500) : graphLinks;
+                e = doTr ? link.transition().duration(500) : link;
 
-                // e.attr("d",function(d)
-                // {
-                //   var z = 1;
-                //   var dx = z*(d.target.x - d.source.x);
-                //   var dy = z*(d.target.y - d.source.y);
-                //   var dr = Math.sqrt(dx*dx + dy*dy);
-
-                //   return "M" + 
-                //           z*d.source.x + "," + 
-                //           z*d.source.y + "A" + 
-                //           dr + "," + dr + " 0 0,1 " + 
-                //           z*d.target.x + "," + 
-                //           z*d.target.y;
-                // });
-
-              e
-                .attr("x1", function(d) { return z*(d.source.x); })
+              
+                e.attr("x1", function(d) { return z*(d.source.x); })
                 .attr("y1", function(d) { return z*(d.source.y); })
                 .attr("x2", function(d) { return z*(d.target.x); })
                 .attr("y2", function(d) { return z*(d.target.y); });
             
 
                 // move nodes
-                n = doTr ? graphNodes.transition().duration(500) : graphNodes;
+                n = doTr ? node.transition().duration(500) : node;
 
                 n.attr("transform", function(d) { return "translate("+z*d.x+","+z*d.y+")" } );
 
                 // move labels
-                l = doTr ? graphLabels.transition().duration(500) : graphLabels;
+                l = doTr ? label.transition().duration(500) : label;
 
                 l.attr("transform", function(d) { return "translate("+z*d.x+","+z*d.y+")" } );
               }
@@ -299,10 +381,10 @@ jarvisHome.directive('d3Graph', function()
 
                 // See if we cross the 'show' threshold in either direction
                 if( currentZoom<SHOW_THRESHOLD && newZoom>=SHOW_THRESHOLD )
-                  svg.selectAll("g.label").classed('on',true);
+                  svg.selectAll(".label").classed('on',true);
 
                 else if( currentZoom>=SHOW_THRESHOLD && newZoom<SHOW_THRESHOLD )
-                  svg.selectAll("g.label").classed('on',false);
+                  svg.selectAll(".label").classed('on',false);
 
                 // See what is the current graph window size
                 s = getViewportSize();
