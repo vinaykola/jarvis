@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <title>J.A.R.V.I.S</title>
+<link rel="stylesheet" href="css/recommend.css" />
+<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
+    <!-- SCROLLS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"><!-- load bootstrap css -->
+    <link rel="stylesheet" href="css/recommend.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/angular-snap.css" type="text/css" />
+    <style>
+        html                    { overflow-y:scroll; }
+        body                    { padding-top:50px; }
+        #todo-list              { margin-bottom:30px; }
+        .one-edge-shadow 
+        {
+            -webkit-box-shadow: 0 8px 6px -6px black;
+            -moz-box-shadow: 0 8px 6px -6px black;
+            box-shadow: 0 8px 6px -6px black;
+        }
+        .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+        .click { cursor: pointer; cursor: hand; }
+    </style>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
+    <script src="/js/external/d3.v3.min.js" type="text/javascript" charset="utf-8" /></script><!-- load d3 -->
+    <script src="/js/external/colorbrewer.js" type="text/javascript" charset="utf-8" /></script><!-- load colorBrewer-->
+    <script src="/js/recommend_core.js" ></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script><!-- load bootstrap -->
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+       <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">J.A.R.V.I.S</a>
+        </div>
+      </div>
+    </div>
+  <div id="container" style="width:1000px" overflow-y:auto;>
+          <div id='carousel_container';float:right;>
+               <h1 style='color:black'><center>Recommended Comics</center></h1> 
+              <div id='left_scroll'><img src='/img/left.png' /></div>
+                <div id='carousel_inner'>
+                    <ul id='carousel_ul'>
+                        <li><a href='#'><table><tr><img src='/img/item1.png' /></tr><tr><center>Text</center></tr></table></a></li>
+                        <li><a href='#'><img src='/img/item2.png' /></a></li>
+                        <li><a href='#'><img src='/img/item3.png' /></a></li>
+                        <li><a href='#'><img src='/img/item4.png' /></a></li>
+                        <li><a href='#'><img src='/img/item5.png' /></a></li>
+                    </ul>
+                 </div>
+              <div id='right_scroll'><img src='/img/right.png' /></div>
+          </div>
+          <div id='carousel_container_1';float:right;>
+               <h1 style='color:black'><center>Recommended Characters</center></h1> 
+              <div id='left_scroll_1'><img src='/img/left.png' /></div>
+                <div id='carousel_inner_1'>
+                    <ul id='carousel_ul_1'>
+                        <li><a href='#'><table><tr><img src='/img/item1.png' /></tr><tr><center>Text</center></tr></table></a></li>
+                        <li><a href='#'><img src='/img/item2.png' /></a></li>
+                        <li><a href='#'><img src='/img/item3.png' /></a></li>
+                        <li><a href='#'><img src='/img/item4.png' /></a></li>
+                        <li><a href='#'><img src='/img/item5.png' /></a></li>
+                    </ul>
+                 </div>
+              <div id='right_scroll_1'><img src='/img/right.png' /></div>
+          </div>
+  </div>
+</body>
+</html>

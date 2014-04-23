@@ -7,6 +7,10 @@ module.exports = function(app,neo4j,fs,request,cheerio)
 		res.sendfile('./app/view/index.html'); 
 	});
 
+	app.get('/recommend', function(req, res) {
+		res.sendfile('./app/view/recommend.html'); 
+	});
+
     app.get('/api/edges:todo_id',function(req, res) {
       var _id = req.params.todo_id
         var query = [
@@ -68,7 +72,9 @@ module.exports = function(app,neo4j,fs,request,cheerio)
 app.get('/api/getcomics:character', function(req, res) {
 
   var charname = req.params.character
+  console.log(charname)
   url = 'http://dc.wikia.com/wiki/'+charname.slice(1)+'_Recommended_Reading'
+  console.log(url)
   request(url, function(error, response, html){
     var output=[];
     if(!error){
@@ -82,11 +88,20 @@ app.get('/api/getcomics:character', function(req, res) {
             var data = $(this);
             $()
             var childs=data.next()['0'].children
+
             for (var child in childs){
-              var comic=childs[child].children[0].next.children[0].attribs.title
-              var comic_name = comic.replace(" (page does not exist)","");
-              
-              output.push(comic_name)
+              try
+              {
+                    var comic=childs[child].children[0].next.children[0].attribs.title
+                    var comic_name = comic.replace(" (page does not exist)","");
+                    
+                    output.push(comic_name)
+              }
+              catch(err)
+              {
+                console.log(err)
+
+              }
             }
 
 
@@ -114,9 +129,4 @@ app.get('/api/getcomics:character', function(req, res) {
 
 
 
-<<<<<<< HEAD
-    });
 };
-=======
-};
->>>>>>> e0f4b080951d2b6d62f7184087a7965c0a98e0d5
