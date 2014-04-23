@@ -5,8 +5,9 @@
 	var app      = express(); 								// create our app w/ express
 	var port  	 = process.env.PORT || 8080; 				// set the port
 	var neo4j = require('neo4j');
-	var db = new neo4j.GraphDatabase('http://localhost:7474');
-
+	var fs = require('fs');
+	var request = require('request');
+	var cheerio = require('cheerio');
 
 	// configuration ===============================================================
 	//Connect to Neo4j here
@@ -19,7 +20,7 @@
 	});
 
 	// routes ======================================================================
-	require('./app/routes.js')(app,neo4j);
+	require('./app/routes.js')(app,neo4j,fs,request,cheerio);
 
 	// listen (start app with node server.js) ======================================
 	app.listen(port);
