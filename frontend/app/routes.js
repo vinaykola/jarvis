@@ -56,6 +56,7 @@ module.exports = function(app,neo4j,fs,request,cheerio)
     
     var output1=[];
     var output2=[];
+    var integ=0;
 
     for (var idx in results) {
         
@@ -65,6 +66,13 @@ module.exports = function(app,neo4j,fs,request,cheerio)
                         a = "Female"
                       else if(results[idx]['m']['_data']['data']['gender']=='0')
                         a = "Neutral"
+            if (integ==0)
+            {
+              output.nodes.push({name:results[idx]['n']['_data']['data']['nameid'],id:results[idx]['n']['_data']['data']['name'].split(":")[1],
+              gender:a,image:results[idx]['n']['_data']['data']['image'],count_of_issue_appearances:results[idx]['n']['_data']['data']['count_of_issue_appearances'],
+            publisher:results[idx]['n']['_data']['data']['publisher'],creators:results[idx]['n']['_data']['data']['creators']})
+              integ=integ+1;
+            }
 
         output.nodes.push({name:results[idx]['m']['_data']['data']['nameid'],id:results[idx]['m']['_data']['data']['name'].split(":")[1],
           gender:a,image:results[idx]['m']['_data']['data']['image'],count_of_issue_appearances:results[idx]['m']['_data']['data']['count_of_issue_appearances'],
