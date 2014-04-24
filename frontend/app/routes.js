@@ -73,12 +73,22 @@ module.exports = function(app,neo4j,fs,request,cheerio)
             {
               var poweri = [];
               var min=0;
-              var max = results[idx]['n']['_data']['data']['powers'].split(",").length-1;
+              if ('powers' in results[idx]['n']['_data']['data'])
+              {
+              if (results[idx]['n']['_data']['data']['powers'].indexOf(",")>-1)
+                max = results[idx]['n']['_data']['data']['powers'].split(",").length-1;
+              else
+                max = min;
+              }
+              else
+                max=0;
               var powersstring = "";
               var randnums = {};
               for(i=0;i<4;i++)
               {
                 var num = Math.floor(Math.random() * (max - min + 1)) + min;
+                if('powers' in results[idx]['n']['_data']['data'])
+                {
                 if(randnums[num]!=1)
                 {
                   if (powersstring!="")
@@ -87,6 +97,7 @@ module.exports = function(app,neo4j,fs,request,cheerio)
                     powersstring = results[idx]['n']['_data']['data']['powers'].split(",")[num];
                   randnums[num] = 1;
                 }
+              }
               }
 
 
@@ -103,12 +114,21 @@ module.exports = function(app,neo4j,fs,request,cheerio)
         {
               var poweri = [];
               var min=0;
-              var max = results[idx]['m']['_data']['data']['powers'].split(",").length-1;
+
+               if ('powers' in results[idx]['m']['_data']['data'])
+              {
+              if (results[idx]['m']['_data']['data']['powers'].indexOf(",")>-1)
+                max = results[idx]['m']['_data']['data']['powers'].split(",").length-1;
+              else
+                max = min;
+              }
               var powersstring = "";
               var randnums = {};
               for(i=0;i<max;i++)
               {
                 var num = Math.floor(Math.random() * (max - min + 1)) + min;
+                 if ('powers' in results[idx]['m']['_data']['data'])
+              {
                 if(randnums[num]!=1)
                 {
                   if (powersstring!="")
@@ -117,6 +137,7 @@ module.exports = function(app,neo4j,fs,request,cheerio)
                     powersstring = results[idx]['m']['_data']['data']['powers'].split(",")[num];
                   randnums[num] = 1;
                 }
+              }
               }
         output.nodes.push({name:results[idx]['m']['_data']['data']['name'],id:results[idx]['m']['_data']['data']['name'].split(":")[1],nameid:results[idx]['m']['_data']['data']['nameid'],
           gender:a,image:results[idx]['m']['_data']['data']['image'],count_of_issue_appearances:results[idx]['m']['_data']['data']['count_of_issue_appearances'],
@@ -168,12 +189,20 @@ module.exports = function(app,neo4j,fs,request,cheerio)
             {
                var poweri = [];
               var min=0;
-              var max = results[idx]['n']['_data']['data']['powers'].split(",").length-1;
+               if ('powers' in results[idx]['n']['_data']['data'])
+              {
+              if (results[idx]['n']['_data']['data']['powers'].indexOf(",")>-1)
+                max = results[idx]['n']['_data']['data']['powers'].split(",").length-1;
+              else
+                max = min;
+              }
               var powersstring = "";
               var randnums = {};
               for(i=0;i<max;i++)
               {
                 var num = Math.floor(Math.random() * (max - min + 1)) + min;
+                if("powers" in results[idx]['n']['_data']['data'])
+                {
                 if(randnums[num]!=1)
                 {
                   if (powersstring!="")
@@ -182,6 +211,7 @@ module.exports = function(app,neo4j,fs,request,cheerio)
                     powersstring = results[idx]['n']['_data']['data']['powers'].split(",")[num];
                   randnums[num] = 1;
                 }
+              }
               }
 
               output.nodes.push({name:results[idx]['n']['_data']['data']['name'],id:results[idx]['n']['_data']['data']['name'].split(":")[1],nameid:results[idx]['n']['_data']['data']['nameid'],
@@ -192,12 +222,22 @@ module.exports = function(app,neo4j,fs,request,cheerio)
 
               poweri = [];
               min=0;
-              max = results[idx]['m']['_data']['data']['powers'].split(",").length-1;
+              if ('powers' in results[idx]['m']['_data']['data'])
+              {
+              if (results[idx]['m']['_data']['data']['powers'].indexOf(",")>-1)
+                max = results[idx]['m']['_data']['data']['powers'].split(",").length-1;
+              else
+                max = min;
+            }
+            else
+              max=0;
               powersstring = "";
               randnums = {};
               for(i=0;i<max;i++)
               {
                 var num = Math.floor(Math.random() * (max - min + 1)) + min;
+                 if ('powers' in results[idx]['m']['_data']['data'])
+              {
                 if(randnums[num]!=1)
                 {
                     if (powersstring!="")
@@ -206,6 +246,7 @@ module.exports = function(app,neo4j,fs,request,cheerio)
                       powersstring = results[idx]['m']['_data']['data']['powers'].split(",")[num];
                     randnums[num] = 1;
                 }
+              }
               }
         output.nodes.push({name:results[idx]['m']['_data']['data']['name'],id:results[idx]['m']['_data']['data']['name'].split(":")[1],nameid:results[idx]['m']['_data']['data']['nameid'],
           gender:a,image:results[idx]['m']['_data']['data']['image'],count_of_issue_appearances:results[idx]['m']['_data']['data']['count_of_issue_appearances'],

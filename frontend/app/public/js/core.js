@@ -34,7 +34,7 @@ jarvisHome.factory('ComicService',function($http)
   return {
     getData : function(nodeid)
     {
-      return $http.get('/api/nodeid:' + nodeid)
+      return $http.get('/api/nodeids:' + nodeid)
                    .then(function(res)
                    {
                       console.log("New Data");

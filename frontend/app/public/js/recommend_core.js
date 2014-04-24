@@ -5,7 +5,8 @@ $(document).ready(function()
             //get names first from localhost:8080/api/getcomics:globalName
             console.log("here");
             var comicname = new Array();
-            $.get("http://localhost:8080/api/getcomics:batman", function(req,res)
+
+            $.get("http://localhost:8081/api/getcomics:batman", function(req,res)
             {
                 console.log("hi");
                // console.log(req);
@@ -22,15 +23,12 @@ $(document).ready(function()
                 //$.get("http://www.comicvine.com/api/issues/?api_key=37a0f6cdbe5752b2f272373ba6a21491ea2629eb&filter=name%3A"+comicname[0]+"&format=json", function(req,res)
                 console.log("123");
 
-              url = 'http://www.comicvine.com/api/characters/?api_key=37a0f6cdbe5752b2f272373ba6a21491ea2629eb&filter=name:superman&format=json'
-              console.log(url)
+              url = 'http://www.comicvine.com/api/characters/?api_key=37a0f6cdbe5752b2f272373ba6a21491ea2629eb&filter=name:superman&format=json&callback='
+           //   console.log(url)
+
+             console.log(httpGet(url));
             
-            
-                $.get("http://www.comicvine.com/api/characters/?api_key=37a0f6cdbe5752b2f272373ba6a21491ea2629eb&filter=name:superman&format=xml", function(req,res)
-                {
-                    console.log("hello");
-                   console.log(req);
-                });
+                
 
 
             },"json");
@@ -93,6 +91,20 @@ function getURLParameter(name) {
     return decodeURI(
         (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
     );
+}
+
+function httpGet(theUrl)
+{
+     var url = 'http://www.comicvine.com/api/characters/';
+      console.log(url)
+    return $http.jsonp(url, {
+        params: {
+            callback: 'JSON_CALLBACK',
+            filter: 'name:superman',
+            format:'json',
+            api_key: '37a0f6cdbe5752b2f272373ba6a21491ea2629eb'
+        }
+    });
 }
 
 function loadParameters()
