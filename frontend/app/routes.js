@@ -44,7 +44,7 @@ module.exports = function(app,neo4j,fs,request,cheerio)
         var query = [
       'MATCH n-[r]->m',
       'WHERE n.nameid="'+_id.slice(1)+'"',
-      'RETURN m limit 30;'].join('\n');   
+      'RETURN n,r,m limit 30;'].join('\n');   
       var output=[];
       console.log(query)
       db.query(query, function (err, results) {
@@ -53,6 +53,9 @@ module.exports = function(app,neo4j,fs,request,cheerio)
     if(err)
         res.send(err)
     //console.log(results);
+    
+    var output1=[];
+    var output2=[];
     for (var idx in results) {
         
         if (results.hasOwnProperty(idx)) {
@@ -61,8 +64,12 @@ module.exports = function(app,neo4j,fs,request,cheerio)
                         a = "Female"
                       else if(results[idx]['m']['_data']['data']['gender']=='0')
                         a = "Neutral"
-        output.push({name:results[idx]['m']['_data']['data']['nameid'],id:results[idx]['m']['_data']['data']['name'].split(":")[1],gender:a,image:results[idx]['m']['_data']['data']['image'],count_of_issue_appearances:results[idx]['m']['_data']['data']['count_of_issue_appearances'],publisher:results[idx]['m']['_data']['data']['publisher'],creators:results[idx]['m']['_data']['data']['creators']});
+        output1.push({name:results[idx]['m']['_data']['data']['nameid'],id:results[idx]['m']['_data']['data']['name'].split(":")[1],
+          gender:a,image:results[idx]['m']['_data']['data']['image'],count_of_issue_appearances:results[idx]['m']['_data']['data']['count_of_issue_appearances'],
+          publisher:results[idx]['m']['_data']['data']['publisher'],creators:results[idx]['m']['_data']['data']['creators']})
+        output2.push({source:results[idx]['n']['_data']['data']['nameid'],id:results[idx]['r']['_data']['data']['id'],target:results[idx]['m']['_data']['data']['nameid']})
         }}
+        output.push({nodes:output1,links:output2})
     console.log(output)  
       res.json(output)
     
@@ -74,7 +81,7 @@ module.exports = function(app,neo4j,fs,request,cheerio)
 
     app.get('/api/allnodes', function(req, res) {
 
-      var query1 = ['START n=node(*) RETURN n;'].join('\n');
+      var query1 = ['MATCH n RETURN n.nameid as names;'].join('\n');
     
 
       var output=[];
@@ -84,14 +91,13 @@ module.exports = function(app,neo4j,fs,request,cheerio)
     console.log(results);    
     if(err)
         res.send(err)
-    
+
     for (var idx in results) {
-        
-        if (results.hasOwnProperty(idx)) {
-        output.push(results[idx]['n']['_data']['data']['nameid']);
-        }}
+        output.push(results[idx].names)
+       }
 
       res.json(output)
+      
     
 
 });
