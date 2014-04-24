@@ -45,7 +45,7 @@ module.exports = function(app,neo4j,fs,request,cheerio)
       'MATCH n-[r]->m',
       'WHERE n.nameid="'+_id.slice(1)+'"',
       'RETURN n,r,m limit 30;'].join('\n');   
-      var output=[];
+      var output={'nodes':[],'links':[]};
       console.log(query)
       db.query(query, function (err, results) {
         
@@ -56,6 +56,7 @@ module.exports = function(app,neo4j,fs,request,cheerio)
     
     var output1=[];
     var output2=[];
+
     for (var idx in results) {
         
         if (results.hasOwnProperty(idx)) {
@@ -64,12 +65,13 @@ module.exports = function(app,neo4j,fs,request,cheerio)
                         a = "Female"
                       else if(results[idx]['m']['_data']['data']['gender']=='0')
                         a = "Neutral"
-        output1.push({name:results[idx]['m']['_data']['data']['nameid'],id:results[idx]['m']['_data']['data']['name'].split(":")[1],
+
+        output.nodes.push({name:results[idx]['m']['_data']['data']['nameid'],id:results[idx]['m']['_data']['data']['name'].split(":")[1],
           gender:a,image:results[idx]['m']['_data']['data']['image'],count_of_issue_appearances:results[idx]['m']['_data']['data']['count_of_issue_appearances'],
           publisher:results[idx]['m']['_data']['data']['publisher'],creators:results[idx]['m']['_data']['data']['creators']})
-        output2.push({source:results[idx]['n']['_data']['data']['nameid'],id:results[idx]['r']['_data']['data']['id'],target:results[idx]['m']['_data']['data']['nameid']})
+        output.links.push({source:results[idx]['n']['_data']['data']['nameid'],id:results[idx]['r']['_data']['data']['id'],target:results[idx]['m']['_data']['data']['nameid']})
         }}
-        output.push({nodes:output1,links:output2})
+       
     console.log(output)  
       res.json(output)
     
