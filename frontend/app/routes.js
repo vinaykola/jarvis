@@ -44,7 +44,7 @@ module.exports = function(app,neo4j,fs,request,cheerio)
         var query = [
       'MATCH n-[r]->m',
       'WHERE n.nameid="'+_id.slice(1)+'" AND n.nameid=r.orig_edge',
-      'RETURN n,r,m order by n.name limit 10;'].join('\n');   
+      'RETURN n,r,m limit 10;'].join('\n');   
       var output={'nodes':[],'links':[]};
       console.log(query)
       db.query(query, function (err, results) {
@@ -58,6 +58,9 @@ module.exports = function(app,neo4j,fs,request,cheerio)
     var output2=[];
     var integ=0;
 
+    var dict = {};
+    var i=0;
+
     for (var idx in results) {
         
         if (results.hasOwnProperty(idx)) {
@@ -68,16 +71,60 @@ module.exports = function(app,neo4j,fs,request,cheerio)
                         a = "Neutral"
             if (integ==0)
             {
+              var poweri = [];
+              var min=0;
+              var max = results[idx]['n']['_data']['data']['powers'].split(",").length-1;
+              var powersstring = "";
+              var randnums = {};
+              for(i=0;i<4;i++)
+              {
+                var num = Math.floor(Math.random() * (max - min + 1)) + min;
+                if(randnums[num]!=1)
+                {
+                  if (powersstring!="")
+                    powersstring = powersstring + ","+ results[idx]['n']['_data']['data']['powers'].split(",")[num];
+                  else
+                    powersstring = results[idx]['n']['_data']['data']['powers'].split(",")[num];
+                  randnums[num] = 1;
+                }
+              }
+
+
               output.nodes.push({name:results[idx]['n']['_data']['data']['name'],id:results[idx]['n']['_data']['data']['name'].split(":")[1],nameid:results[idx]['n']['_data']['data']['nameid'],
               gender:a,image:results[idx]['n']['_data']['data']['image'],count_of_issue_appearances:results[idx]['n']['_data']['data']['count_of_issue_appearances'],
-            publisher:results[idx]['n']['_data']['data']['publisher'],creators:results[idx]['n']['_data']['data']['creators']})
+            publisher:results[idx]['n']['_data']['data']['publisher'],creators:results[idx]['n']['_data']['data']['creators'],powers:powersstring})
               integ=integ+1;
+              dict[results[idx]['n']['_data']['data']['name']] = 1;
             }
+            
 
+
+          if (dict[results[idx]['n']['_data']['data']['name']]==1)
+        {
+              var poweri = [];
+              var min=0;
+              var max = results[idx]['m']['_data']['data']['powers'].split(",").length-1;
+              var powersstring = "";
+              var randnums = {};
+              for(i=0;i<max;i++)
+              {
+                var num = Math.floor(Math.random() * (max - min + 1)) + min;
+                if(randnums[num]!=1)
+                {
+                  if (powersstring!="")
+                    powersstring = powersstring + ","+ results[idx]['m']['_data']['data']['powers'].split(",")[num];
+                  else
+                    powersstring = results[idx]['m']['_data']['data']['powers'].split(",")[num];
+                  randnums[num] = 1;
+                }
+              }
         output.nodes.push({name:results[idx]['m']['_data']['data']['name'],id:results[idx]['m']['_data']['data']['name'].split(":")[1],nameid:results[idx]['m']['_data']['data']['nameid'],
           gender:a,image:results[idx]['m']['_data']['data']['image'],count_of_issue_appearances:results[idx]['m']['_data']['data']['count_of_issue_appearances'],
-          publisher:results[idx]['m']['_data']['data']['publisher'],creators:results[idx]['m']['_data']['data']['creators']})
+          publisher:results[idx]['m']['_data']['data']['publisher'],creators:results[idx]['m']['_data']['data']['creators'],powers:powersstring})
         output.links.push({source:results[idx]['n']['_data']['data']['name'],id:results[idx]['r']['_data']['data']['id'],target:results[idx]['m']['_data']['data']['name']})
+        dict[results[idx]['n']['_data']['data']['name']] = 1
+        }
+
         }}
        
     console.log(output)  
@@ -119,15 +166,50 @@ module.exports = function(app,neo4j,fs,request,cheerio)
                         a = "Neutral"
             if (integ==0)
             {
+               var poweri = [];
+              var min=0;
+              var max = results[idx]['n']['_data']['data']['powers'].split(",").length-1;
+              var powersstring = "";
+              var randnums = {};
+              for(i=0;i<max;i++)
+              {
+                var num = Math.floor(Math.random() * (max - min + 1)) + min;
+                if(randnums[num]!=1)
+                {
+                  if (powersstring!="")
+                    powersstring = powersstring + ","+ results[idx]['n']['_data']['data']['powers'].split(",")[num];
+                  else
+                    powersstring = results[idx]['n']['_data']['data']['powers'].split(",")[num];
+                  randnums[num] = 1;
+                }
+              }
+
               output.nodes.push({name:results[idx]['n']['_data']['data']['name'],id:results[idx]['n']['_data']['data']['name'].split(":")[1],nameid:results[idx]['n']['_data']['data']['nameid'],
               gender:a,image:results[idx]['n']['_data']['data']['image'],count_of_issue_appearances:results[idx]['n']['_data']['data']['count_of_issue_appearances'],
-            publisher:results[idx]['n']['_data']['data']['publisher'],creators:results[idx]['n']['_data']['data']['creators']})
+            publisher:results[idx]['n']['_data']['data']['publisher'],creators:results[idx]['n']['_data']['data']['creators'],powers:powersstring})
               integ=integ+1;
             }
 
+              poweri = [];
+              min=0;
+              max = results[idx]['m']['_data']['data']['powers'].split(",").length-1;
+              powersstring = "";
+              randnums = {};
+              for(i=0;i<max;i++)
+              {
+                var num = Math.floor(Math.random() * (max - min + 1)) + min;
+                if(randnums[num]!=1)
+                {
+                    if (powersstring!="")
+                      powersstring = powersstring + ","+ results[idx]['m']['_data']['data']['powers'].split(",")[num];
+                    else
+                      powersstring = results[idx]['m']['_data']['data']['powers'].split(",")[num];
+                    randnums[num] = 1;
+                }
+              }
         output.nodes.push({name:results[idx]['m']['_data']['data']['name'],id:results[idx]['m']['_data']['data']['name'].split(":")[1],nameid:results[idx]['m']['_data']['data']['nameid'],
           gender:a,image:results[idx]['m']['_data']['data']['image'],count_of_issue_appearances:results[idx]['m']['_data']['data']['count_of_issue_appearances'],
-          publisher:results[idx]['m']['_data']['data']['publisher'],creators:results[idx]['m']['_data']['data']['creators']})
+          publisher:results[idx]['m']['_data']['data']['publisher'],creators:results[idx]['m']['_data']['data']['creators'],powers:powersstring})
         output.links.push({source:results[idx]['n']['_data']['data']['name'],id:results[idx]['r']['_data']['data']['id'],target:results[idx]['m']['_data']['data']['name']})
         }}
        
