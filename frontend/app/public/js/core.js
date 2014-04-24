@@ -494,7 +494,7 @@ jarvisHome.directive('d3Graph', function(ComicService)
                     info += '<div class=f><span class=l>gender</span>: ' + n.gender + '</div>';
                   if( true )
                     info += '<div class=f><span class=l>powers</span>: ' + n.powers + '</div>';
-                  info += '<input background=#000 value=Recommend  class=clouds-flat-button><span class=l></input></div>';
+                  info += '<input background=#000 type=submit value=Recommend  class=clouds-flat-button><span class=l></input></div>';
                   return info;
                 }
             } //Scope.render
