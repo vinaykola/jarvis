@@ -43,7 +43,7 @@ module.exports = function(app,neo4j,fs,request,cheerio)
       var _id = req.params.nameid
         var query = [
       'MATCH n-[r]->m',
-      'WHERE n.nameid="'+_id.slice(1)+'"',
+      'WHERE n.nameid="'+_id.slice(1)+'" AND n.nameid=r.orig_edge',
       'RETURN n,r,m limit 30;'].join('\n');   
       var output={'nodes':[],'links':[]};
       console.log(query)
@@ -68,16 +68,16 @@ module.exports = function(app,neo4j,fs,request,cheerio)
                         a = "Neutral"
             if (integ==0)
             {
-              output.nodes.push({name:results[idx]['n']['_data']['data']['nameid'],id:results[idx]['n']['_data']['data']['name'].split(":")[1],
+              output.nodes.push({name:results[idx]['n']['_data']['data']['name'],id:results[idx]['n']['_data']['data']['name'].split(":")[1],nameid:results[idx]['n']['_data']['data']['nameid'],
               gender:a,image:results[idx]['n']['_data']['data']['image'],count_of_issue_appearances:results[idx]['n']['_data']['data']['count_of_issue_appearances'],
             publisher:results[idx]['n']['_data']['data']['publisher'],creators:results[idx]['n']['_data']['data']['creators']})
               integ=integ+1;
             }
 
-        output.nodes.push({name:results[idx]['m']['_data']['data']['nameid'],id:results[idx]['m']['_data']['data']['name'].split(":")[1],
+        output.nodes.push({name:results[idx]['m']['_data']['data']['name'],id:results[idx]['m']['_data']['data']['name'].split(":")[1],nameid:results[idx]['m']['_data']['data']['nameid'],
           gender:a,image:results[idx]['m']['_data']['data']['image'],count_of_issue_appearances:results[idx]['m']['_data']['data']['count_of_issue_appearances'],
           publisher:results[idx]['m']['_data']['data']['publisher'],creators:results[idx]['m']['_data']['data']['creators']})
-        output.links.push({source:results[idx]['n']['_data']['data']['nameid'],id:results[idx]['r']['_data']['data']['id'],target:results[idx]['m']['_data']['data']['nameid']})
+        output.links.push({source:results[idx]['n']['_data']['data']['name'],id:results[idx]['r']['_data']['data']['id'],target:results[idx]['m']['_data']['data']['name']})
         }}
        
     console.log(output)  
