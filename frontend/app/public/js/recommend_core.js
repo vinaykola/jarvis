@@ -1,41 +1,58 @@
-$(document).ready(function() 
+var globalName = "";
+$(window).load(function()
 	{
         //for recommended reading - without bfs
         //FIrst set of images for book names , we need to get from http://www.comicvine.com/api/characters?api_key=37a0f6cdbe5752b2f272373ba6a21491ea2629eb&filter=name:superman&format=json
             //get names first from localhost:8080/api/getcomics:globalName
+           
             console.log("here");
             var comicname = new Array();
-
-            $.get("http://localhost:8081/api/getcomics:batman", function(req,res)
+            loadParameters();
+            var images = [];
+            $.get("http://localhost:8081/api/nodes:"+globalName, function(req,res)
             {
-                console.log("hi");
-               // console.log(req);
-                var i=0;
-                for (var idx in req)
-                {
-                    //console.log(req[idx]);
-                    comicname[i]=req[idx].split(":")[1].trim();
-                    i=i+1;
-                    if (i>5)
-                        break;
-                }
-                console.log(comicname)
-                //$.get("http://www.comicvine.com/api/issues/?api_key=37a0f6cdbe5752b2f272373ba6a21491ea2629eb&filter=name%3A"+comicname[0]+"&format=json", function(req,res)
-                console.log("123");
-
-              url = 'http://www.comicvine.com/api/characters/?api_key=37a0f6cdbe5752b2f272373ba6a21491ea2629eb&filter=name:superman&format=json&callback='
-           //   console.log(url)
-
-             console.log(httpGet(url));
-            
                 
-
-
+                var i=0;
+                for (idx in req['nodes'])
+                {
+                    console.log(req['nodes'][idx]['image']);
+                    var a = req['nodes'][idx]['nameid'];
+                    a = a.replace(" ","%20");
+                    console.log(a);
+                    if(req['nodes'][idx]['image'])
+                        $('#carousel_ul').append('<li><div class="imagecontainer"><a href=http://localhost:8081/recommend?name='+a+'><table><tr><img src="'+req['nodes'][idx]['image']+'"/></tr><tr><center>'+req['nodes'][idx]['nameid']+'</center></tr></table></a></div></li>') ;
+                }
+                
             },"json");
 
+            $.get("http://localhost:8081/api/getcomics:"+globalName, function(req,res)
+            {
+                
+                var i=0;
+                for (idx in req)
+                {
+                    $('#carousel_ul1').append('<center><li><a href=http://www.amazon.com/Batman-The-Dark-Knight-Returns/dp/1563893428>'+req[idx]+'</a></li></center>') ;
+                    if (idx>6)
+                        break;
+                }
+                if (req.length==0)
+                {
+                     $.get("http://localhost:8081/api/getcomics:batman", function(req,res)
+                     {
+                         for (idx in req)
+                        {
+                            $('#carousel_ul1').append('<center><li><a href=http://www.amazon.com/Batman-The-Dark-Knight-Returns/dp/1563893428>'+req[idx]+'</a></li></center>') ;
+                            if (idx>6)
+                                break;
+                        }
+                     }, "json");
+                }
+                
+            },"json");
+            
             //then take 5 of those names and slice it to 2 and pass it to the 2nd get call. Final images, append to carousel_ul
 			//We need to get the image
-            $('#carousel_ul').append('<li><div class="imagecontainer"><img src="http://www.coverbrowser.com/image/batman-dark-knight-returns/3-1.jpg" /></div></li>')   
+             
             $('#carousel_ul li:first').before($('#carousel_ul li:last'));    
             $('#right_scroll img').click(function()
             {
@@ -85,7 +102,13 @@ $(document).ready(function()
 
       });
 
-var globalName = "";
+/*
+$(window).load(function() {
+ // executes when complete page is fully loaded, including frames,objects and images
+ loadParameters();
+ console.log("SDfsdfsdf"+globalName)
+});
+*/
 
 function getURLParameter(name) {
     return decodeURI(
@@ -96,21 +119,23 @@ function getURLParameter(name) {
 function httpGet(theUrl)
 {
      var url = 'http://www.comicvine.com/api/characters/';
-      console.log(url)
-    return $http.jsonp(url, {
-        params: {
-            callback: 'JSON_CALLBACK',
-            filter: 'name:superman',
-            format:'json',
-            api_key: '37a0f6cdbe5752b2f272373ba6a21491ea2629eb'
-        }
-    });
+      console.log("url"+url)
+     $.ajax({
+                url: 'http://www.comicvine.com/api/characters/',
+                api_key: '37a0f6cdbe5752b2f272373ba6a21491ea2629eb',
+                filter: 'name:superman',
+                crossDomain: true,
+                format: 'json',
+                type: 'GET',
+                success: function(){
+                    alert("success");
+                }
+            });
 }
 
 function loadParameters()
 {
 	var name = getURLParameter('name');
-	alert("the name parameter is "+name);
 	globalName = name;
 }
 

@@ -70,6 +70,11 @@ width:6800px; /* important */
 padding-bottom:10px;
 }
 
+#carousel_ul1 {
+list-style-type: none;
+list-style-image: none;
+}
+
 #carousel_ul_1 li{
 float: left; /* important for inline positioning of the list items */                                    
 width:200px;  /* fixed width, important */
@@ -112,5 +117,5 @@ cursor: hand;
 /* resize images */
 .imagecontainer img {
     width: 100%;
-    height: auto;
+    height: 120px;
 }

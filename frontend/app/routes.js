@@ -124,7 +124,7 @@ module.exports = function(app,neo4j,fs,request,cheerio)
               }
               var powersstring = "";
               var randnums = {};
-              for(i=0;i<max;i++)
+              for(i=0;i<4;i++)
               {
                 var num = Math.floor(Math.random() * (max - min + 1)) + min;
                  if ('powers' in results[idx]['m']['_data']['data'])
@@ -198,7 +198,7 @@ module.exports = function(app,neo4j,fs,request,cheerio)
               }
               var powersstring = "";
               var randnums = {};
-              for(i=0;i<max;i++)
+              for(i=0;i<4;i++)
               {
                 var num = Math.floor(Math.random() * (max - min + 1)) + min;
                 if("powers" in results[idx]['n']['_data']['data'])
@@ -233,7 +233,7 @@ module.exports = function(app,neo4j,fs,request,cheerio)
               max=0;
               powersstring = "";
               randnums = {};
-              for(i=0;i<max;i++)
+              for(i=0;i<4;i++)
               {
                 var num = Math.floor(Math.random() * (max - min + 1)) + min;
                  if ('powers' in results[idx]['m']['_data']['data'])
