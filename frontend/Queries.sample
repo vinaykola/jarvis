@@ -1,0 +1,13 @@
+--Get all artists similar to artist given from the same genre
+
+SELECT a.name,a.id from similarLinks as s 
+JOIN artist as a on a.id == s.artist2_id 
+JOIN artistGenre ag ON ag.artist_id == a.id 
+WHERE ag.genre_id = 'MA0000002532' and s.artist1_id = 'MN0000944084';
+
+--Get all artists similar to artist given from the same genre and all subgenre's of the genre
+
+SELECT a.name,a.id from similarLinks as s 
+JOIN artist as a on a.id == s.artist2_id 
+JOIN artistGenre ag ON ag.artist_id == a.id 
+WHERE s.artist1_id = 'MN0000944084' and ag.genre_id in (SELECT id from genre where id = 'MA0000002532' or parent='MA0000002532');

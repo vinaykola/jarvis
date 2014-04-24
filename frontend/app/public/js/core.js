@@ -3,25 +3,25 @@ var jarvisHome = angular.module('jarvisHome',['ui.bootstrap']);
 
 jarvisHome.controller('mainController', function($scope,$http) {
 
-  $http.get('/api/allnodes')
+
+      $http.get('/api/nodes:Batman')//'/api/edges:' + $scope.selected)
+       .then(function(res){
+          $scope.graphData = res.data;
+          console.log($scope.graphData);
+
+            $http.get('/api/allnodes')
        .then(function(res){     
           $scope.nodes = res.data;
           console.log($scope.nodes);
           console.log("noobs");
         });
-
-  $http.get('/js/temp.json')
-       .then(function(res){
-          $scope.graphData = res.data;        
-          console.log($scope.graphData);
-          console.log("todos");
         });
 
 
   $scope.searchChar = function() 
   {
     console.log($scope.selected);
-    $http.get('/api/edges:' + $scope.selected)
+    $http.get('/api/nodes:' + $scope.selected)
        .then(function(res){
           $scope.graphData = res.data;
           console.log($scope.graphData);
@@ -29,9 +29,26 @@ jarvisHome.controller('mainController', function($scope,$http) {
   }
 });
 
+jarvisHome.factory('ComicService',function($http)
+{
+  return {
+    getData : function(nodeid)
+    {
+      return $http.get('/api/nodeid:' + nodeid)
+                   .then(function(res)
+                   {
+                      console.log("New Data");
+                      return res.data;
+                    });
+    }
+  };
+
+});
 
 
-jarvisHome.directive('d3Graph', function() 
+
+
+jarvisHome.directive('d3Graph', function(ComicService) 
 {
 
       //Size of region to render on
@@ -65,9 +82,9 @@ jarvisHome.directive('d3Graph', function()
       //D3 force directed layout
       //Try playing with the charge and link distance
       var force = d3.layout.force()
-          .gravity(0.25)
-          .charge(-100)
-          .linkDistance(300)
+          //.gravity(0.25)
+          .charge(-500)
+          .linkDistance(100)
           .size([WIDTH, HEIGHT]);
 
     return {
@@ -79,9 +96,13 @@ jarvisHome.directive('d3Graph', function()
             scope.$watch('val', function(newValue,oldValue) 
             {
               console.log("UI");
+              console.log("old");
+              console.log(oldValue);
+              console.log("new");
+              console.log(newValue);
               if(newValue)
                 scope.render(newValue);
-            }, true);
+            });
 
 
             //Render UI on screen
@@ -102,7 +123,16 @@ jarvisHome.directive('d3Graph', function()
                         .attr("id","graph")
                         .attr("viewBox", "0 0 " + WIDTH + " " + HEIGHT )
                         .attr("preserveAspectRatio", "xMidYMid meet")
-                        .attr("class","parent");
+                        .call( d3.behavior.zoom() 
+                              .x(xScale)
+                              .y(yScale)
+                              .scaleExtent([1, 6])
+                              .on("zoom", doZoom)
+                              )
+                        .on("dblclick.zoom", null)
+                        .append("svg:g")
+                        .attr("width", WIDTH)
+                        .attr("height", HEIGHT).attr("class","parent");
 
 
               var node = svg.selectAll(".node"),
@@ -133,7 +163,7 @@ jarvisHome.directive('d3Graph', function()
 
 
               // Movie panel: the div into which the movie details info will be written
-              //movieInfoDiv = d3.select("#movieInfo");
+              comicInfoDiv = d3.select("#comicInfo");
 
               var links = data.links;
               var nodes = data.nodes;
@@ -151,82 +181,39 @@ jarvisHome.directive('d3Graph', function()
               svg.call( d3.behavior.drag()
                   .on("drag",dragmove) );
 
-              svg.call( d3.behavior.zoom() 
-                  .x(xScale)
-                  .y(yScale)
-                  .scaleExtent([1, 6])
-                  .on("zoom", doZoom)
-                  );
-              svg.on("dblclick.zoom", null);
-
-
-              //var networkGraph = svg.append('svg:g').attr('class','grpParent');
-
-
-               // links: simple lines
-              //var graphLinks = networkGraph.append('svg:g').attr('class','grp gLinks');
-              //   .selectAll("line")
-              //   .data(linkArray)
-              //   .enter().append("line")
-              //   .attr("class", "link");
-
-              // // nodes: an SVG circle
-              //var graphNodes = networkGraph.append('svg:g').attr('class','grp gNodes');
-              //   .selectAll("circle")
-              //   .data(force.nodes())
-              //   .enter().append("svg:circle")
-              //   .attr("class",function(d) { return "node " + d.name; })
-              //   .attr('r', 10)
-              //   .attr('pointer-events', 'all')
-              //   .on("dblclick",addNodes);
-
-
-              // graphNodes.append("title")
-              // .attr("x", 19)
-              // .attr("dy", ".31em")
-              // .text(function(d) 
-              // {
-              //     return d.name;
-              // });
-
-
-              // labels: a group with two SVG text: a title and a shadow (as background)
-              //var graphLabels = networkGraph.append('svg:g').attr('class','grp gLabel');
-              //   .selectAll("g.label")
-              //   .data(nodeArray, function(d){return d.name} )
-              //   .enter().append("svg:g")
-              //   .attr('class','label');
-
-              // labels = graphLabels.append('svg:text')
-              //           .attr('x','-3em')
-              //           .attr('y','-1em')
-              //           .attr('pointer-events', 'none') // they go to the circle beneath
-              //           .attr('id', function(d) { return "lf" + d.index; } )
-              //           .attr('class','nlabel')
-              //           .text( function(d) { return d.name; } );
-
 
             addNodes(nodes,links);
 
 
-            function getNewNodes()
+            function getNewNodes(node)
             {
-              nodes = [{name:"scarecrow",id:4,url:"mno"}];
-              links = [{source: "scarecrow", target: "batman",type:"FOE", "id":4}, {source: "scarecrow", target: "superman",type:"FOE", "id":5}
-                      ,{source: "scarecrow", target: "joker",type:"FRIEND", "id":6}];
-              addNodes(nodes,links);
+              var local = undefined;
+                console.log(node.nameid);
+                ComicService.getData(node.name).then(function(response)
+                { 
+                  local = response;
+                  addNodes(local.nodes,local.links);
+                });
             }
 
 
             function addNodes(nodes,links)
             {
               var i=0,j=0;
+              console.log(nodeArray.length);
+              console.log(i);
               nodes.forEach(function(nodeData)
               {
                 if(findIndexByKeyValue(nodeArray,"name",nodeData.name) == -1)
+                {
                   nodeArray.push(nodeData);
                   i++;
+                }
               });
+
+              console.log(nodeArray.length);
+              console.log(i);
+
               console.log(nodeArray);
               console.log(links);
               console.log(currentLinks);
@@ -240,39 +227,45 @@ jarvisHome.directive('d3Graph', function()
                   var temp = {};
                   temp.source = nodeArray[findIndexByKeyValue(nodeArray,"name",links[i].source)];
                   temp.target = nodeArray[findIndexByKeyValue(nodeArray,"name",links[i].target)];
-                  temp.type = links[i].type;
                   temp.id = links[i].id;
+                  console.log(temp);
                   linkArray.push(temp);
                   currentLinks.push(temp.id);
                   j++;
                 }
               }
+              console.log("Here");
+              console.log(linkArray);
+              console.log(nodeArray);
 
               if(i >0 || j > 0)
                 console.log("Start");
+                console.log(i);
+                console.log(j);
                 start();
             }
 
             function start() 
             {
               console.log("1");
-              link = link.data(force.links(), function(d) { return d.source.name + '-' + d.target.name; });
+              link = link.data(linkArray, function(d) { return d.source.name + '-' + d.target.name; });
               link.enter().insert("line", ".node").attr("class", "link");
               link.exit().remove();
               
               console.log("2");
-              node = node.data(force.nodes(), function(d) { return d.name; });
+              node = node.data(nodeArray, function(d) { return d.name; });
               node.enter().append("circle").attr("r", 10)
               .attr('pointer-events', 'all')
               .attr("class",function(d) { return "node " + d.name; })
-              .on("dblclick",getNewNodes);
+              .on("dblclick",getNewNodes)
+              .on("click", function(d) { showComicPanel(d); } );
 
               node.append("title")
               .attr("x", 19)
               .attr("dy", ".31em")
               .text(function(d) 
               {
-                  return d.name;
+                  return d.nameid;
               });
 
 
@@ -284,12 +277,12 @@ jarvisHome.directive('d3Graph', function()
               .attr('x','-3em')
               .attr('y','-1em')
               .attr('pointer-events', 'none') // they go to the circle beneath
-              .attr('id', function(d) { return "lf" + d.index; } )
+              //.attr('id', function(d) { return "lf" + d.index; } )
               .attr('class','label')
-              .text( function(d) { return d.name; } );
+              .text( function(d) { return d.nameid; } );
 
-              force.start();
-              console.log("4");              
+              console.log("4"); 
+              force.start();             
             }
 
 
@@ -314,9 +307,10 @@ jarvisHome.directive('d3Graph', function()
                 var doTr = (mode == 'move');
 
                 // drag: translate to new offset
-                if( off !== undefined && (off.x != currentOffset.x || off.y != currentOffset.y ) ) 
+                if( off !== undefined && (off.x != currentOffset.x || off.y != currentOffset.y ) && mode != "ZOOM" ) 
                 {
-                  g = d3.select('.parent')
+                  console.log("In parent");
+                  g = d3.select('.parent');
                   if( doTr )
                     g = g.transition().duration(500);
                   g.attr("transform", function(d) { return "translate("+off.x+","+off.y+")" } );
@@ -364,6 +358,8 @@ jarvisHome.directive('d3Graph', function()
                 console.log("DRAG",d3.event);
                 offset = { x : currentOffset.x + d3.event.dx,
                 y : currentOffset.y + d3.event.dy };
+                console.log(currentOffset);
+                console.log(offset);
                 repositionGraph( offset, undefined, 'drag' );
               }
 
@@ -375,7 +371,7 @@ jarvisHome.directive('d3Graph', function()
              function doZoom( increment ) 
              {
                 newZoom = increment === undefined ? d3.event.scale : zoomScale(currentZoom+increment);
-                console.log("ZOOM",currentZoom,"->",newZoom,increment);
+                //console.log("ZOOM",currentZoom,"->",newZoom,increment);
                 if( currentZoom == newZoom )
                   return; // no zoom change
 
@@ -422,6 +418,85 @@ jarvisHome.directive('d3Graph', function()
                      x: d.body.scrollLeft,
                      y: d.body.scrollTop};
               }
+
+               /* Change status of a panel from visible to hidden or viceversa
+                   id: identifier of the div to change
+                   status: 'on' or 'off'. If not specified, the panel will toggle status
+                */
+                toggleDiv = function( id, status ) 
+                {
+                  console.log("In toggle" + id + status);
+                  d = d3.select('div#'+id);
+                  if( status === undefined )
+                    status = d.attr('class') == 'panel_on' ? 'off' : 'on';
+                  d.attr( 'class', 'panel_' + status );
+                  return false;
+                }
+
+                /* --------------------------------------------------------------------- */
+                /* Show the details panel for a movie AND highlight its node in 
+                   the graph. Also called from outside the d3.json context.
+                   Parameters:
+                   - new_idx: index of the movie to show
+                   - doMoveTo: boolean to indicate if the graph should be centered
+                     on the movie
+                */
+                selectCharacter = function( new_name, doMoveTo ) {
+
+                  // do we want to center the graph on the node?
+                  doMoveTo = doMoveTo || false;
+                  if( doMoveTo ) 
+                  {
+                      s = getViewportSize();
+                      var tempObj = nodeArray[findIndexByKeyValue(nodeArray,"name",new_name)];
+                      width  = s.w<WIDTH ? s.w : WIDTH;
+                      height = s.h<HEIGHT ? s.h : HEIGHT;
+                      offset = { x : s.x + width/2  - tempObj.x*currentZoom,
+                           y : s.y + height/2 - tempObj.y*currentZoom };
+                      repositionGraph( offset, undefined, 'move' );
+                  }
+                  // Now highlight the graph node and show its movie panel
+                  //showComicPanel(tempObj);
+                }
+
+              /* --------------------------------------------------------------------- */
+              /* Show the comic details panel for a given node
+               */
+              function showComicPanel( node ) {
+                // Fill it and display the panel
+                comicInfoDiv
+                .html( getComicInfo(node,nodeArray) )
+                .attr("class","panel_on");
+              }
+
+               /* Compose the content for the panel with movie details.
+                   Parameters: the node data, and the array containing all nodes
+                */
+                function getComicInfo( n, nodeArray ) {
+                  info = '<div id="cover">';
+                  info += '<div class=t style="float: right">' + n.nameid + '</div>';
+                  if( n.image )
+                    info += '<br><br><img align="left" class="cover" height="250" width="220" src="'+ n.image + '" title="' + n.name + '"/>';
+                  info +=
+                  '<img src="/img/close.png" class="action" height="25" width="25" style="top: 0px;" title="close panel" onClick="toggleDiv(\'comicInfo\');"/>';
+
+                  info += '<br/></div><div style="clear: both;">'
+                  if( n.creators )
+                    info += '<div class=f><span class=l>Creators</span>: <span class=g>' 
+                         + n.creators + '</span></div>';
+                  if( n.publisher )
+                    info += '<div class=f><span class=l>Publisher by</span>: <span class=d>' 
+                         + n.publisher + '</span></div>';
+                  if( n.count_of_issue_appearances )
+                    info += '<div class=f><span class=l>Issues Appeared In </span>: <span class=c>' 
+                         + n.count_of_issue_appearances + '</span></div>';
+                  if( n.gender )
+                    info += '<div class=f><span class=l>gender</span>: ' + n.gender + '</div>';
+                  if( true )
+                    info += '<div class=f><span class=l>powers</span>: ' + n.powers + '</div>';
+                  info += '<input background=#000 value=Recommend  class=clouds-flat-button><span class=l></input></div>';
+                  return info;
+                }
             } //Scope.render
         } //link
     };//return

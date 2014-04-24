@@ -15,6 +15,7 @@
 	<link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/angular-snap.css" type="text/css" />
 	<style>
+	@import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css");
 		html 					{ overflow-y:scroll; }
 		body 					{ padding-top:50px; }
 		#todo-list 				{ margin-bottom:30px; }
@@ -29,8 +30,13 @@
 
 		.link {
 		  fill: none;
-		  stroke: #666;
+		  stroke: #ccc;
 		  stroke-width: 1.5px;
+		}
+
+		html, body 
+		{
+		  overflow: hidden;
 		}
 
 		circle {
@@ -55,6 +61,99 @@
 		    visibility: visible;    
 		}
 
+		div.panel_off 
+		{
+		    visibility: hidden;
+		    pointer-events: none;
+		}
+
+		/* ....................................................................... */
+/* Movie details panel */
+
+div#comicInfo {
+    position: fixed;
+    right: 5px;
+    bottom: 100px;
+    cursor: text;
+    width: 250px;
+    z-index: 1000;
+    background: #ccc;
+    border: solid 1px #aaa;
+    border-radius: 8px;    
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 10px;    
+    padding: 4px;
+    text-align: right;
+}
+
+div#comicInfo div#cover {
+    text-align: left; 
+    height: 300px;
+}
+
+div#comicInfo div.t {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+div#comicInfo img.cover {
+    margin-bottom: 6px;
+    position: absolute;
+    right: 13px;
+}
+
+div#comicInfo img.action {
+    cursor: pointer;
+    position: absolute;
+}
+
+div#comicInfo div.f {
+    border-top: 1px dotted #8E5981;
+    margin-bottom: 3px;
+    margin-top: 3px;
+}
+
+div#comicInfo span.d {
+    font-weight: bold;
+}
+
+div#comicInfo span.c {
+    font-style: italic;
+}
+
+div#comicInfo span.l {
+    font-size: 11px;
+    color: #24553E;
+    font-variant: small-caps;
+}
+
+.clouds-flat-button {
+  position: relative;
+  vertical-align: top;
+  width: 100%;
+  height: 30px;
+  padding: 0;
+  font-size: 22px;
+  color:#454545;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  background: #ecf0f1;
+  border: 0;
+      font-size: 11px;
+    color: #24553E;
+    font-variant: small-caps;
+  border-bottom: 2px solid #dadedf;
+  cursor: pointer;
+  -webkit-box-shadow: inset 0 -2px #dadedf;
+  box-shadow: inset 0 -2px #dadedf;
+}
+.clouds-flat-button:active {
+  top: 1px;
+  outline: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
 	</style>
 
 	<!-- SPELLS -->
@@ -71,7 +170,7 @@
 </head>
 
 <!-- SET THE CONTROLLER  -->
-<body>
+<body class="mainBody">
 	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 	   <div class="container">
         <div class="navbar-header">
@@ -89,7 +188,7 @@
 	    			</tr>
 	    			<tr>
 	    				<td >
-	    					<input class="form-control"  type="text" ng-model="selected" typeahead="node.name for node in nodes | filter:$viewValue | limitTo:8"  placeholder="Type Superhero name..." size= 35 />
+	    					<input class="form-control"  type="text" ng-model="selected" typeahead="node for node in nodes | filter:$viewValue | limitTo:8"  placeholder="Type Superhero name..." size= 35 />
 	    				</td>
 	    				<td>
 	    					<input type="image"  display="block" height=36 width=36  src="/img/search.png"></input>
@@ -98,5 +197,8 @@
 	    		</table>
     		</form>
     </div><!-- /.container -->
+
+  <div id="comicInfo" class="panel_off"></div>
+  </div>
 </body>
 </html>

@@ -3,7 +3,7 @@
 	// set up ======================================================================
 	var express  = require('express');
 	var app      = express(); 								// create our app w/ express
-	var port  	 = process.env.PORT || 8080; 				// set the port
+	var port  	 = process.env.PORT || 8081; 				// set the port
 	var neo4j = require('neo4j');
 	var fs = require('fs');
 	var request = require('request');
