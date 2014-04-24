@@ -18,20 +18,26 @@ $(document).ready(function()
                     if (i>5)
                         break;
                 }
-                             // console.log(comicname)
+                console.log(comicname)
                 //$.get("http://www.comicvine.com/api/issues/?api_key=37a0f6cdbe5752b2f272373ba6a21491ea2629eb&filter=name%3A"+comicname[0]+"&format=json", function(req,res)
                 console.log("123");
-                $.get("http://www.comicvine.com/api/issues/?api_key=37a0f6cdbe5752b2f272373ba6a21491ea2629eb&filter=name%3AThe%20Dark%20Knight%20Returns&format=json", function(req,res)
+
+              url = 'http://www.comicvine.com/api/characters/?api_key=37a0f6cdbe5752b2f272373ba6a21491ea2629eb&filter=name:superman&format=json'
+              console.log(url)
+            
+            
+                $.get("http://www.comicvine.com/api/characters/?api_key=37a0f6cdbe5752b2f272373ba6a21491ea2629eb&filter=name:superman&format=xml", function(req,res)
                 {
                     console.log("hello");
-                    console.log(req);
-                },"json");
+                   console.log(req);
+                });
+
 
             },"json");
 
             //then take 5 of those names and slice it to 2 and pass it to the 2nd get call. Final images, append to carousel_ul
 			//We need to get the image
-            $('#carousel_ul').append('<li><div class="imagecontainer"><img src="http://dc.wikia.com/wiki/File:Batman_-_Dark_Knight_Returns_1.jpg" /></div></li>')   
+            $('#carousel_ul').append('<li><div class="imagecontainer"><img src="http://www.coverbrowser.com/image/batman-dark-knight-returns/3-1.jpg" /></div></li>')   
             $('#carousel_ul li:first').before($('#carousel_ul li:last'));    
             $('#right_scroll img').click(function()
             {

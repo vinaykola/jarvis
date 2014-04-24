@@ -15,8 +15,8 @@ module.exports = function(app,neo4j,fs,request,cheerio)
       var _id = req.params.todo_id
         var query = [
       'MATCH n-[r]->m',
-      'WHERE n.name="'+_id.slice(1)+'"',
-      'RETURN n,m limit 30;'].join('\n');   
+      'WHERE n.nameid="'+_id.slice(1)+'"',
+      'RETURN n,r,m limit 30;'].join('\n');   
       var output=[];
       console.log(query)
       db.query(query, function (err, results) {
@@ -29,7 +29,7 @@ module.exports = function(app,neo4j,fs,request,cheerio)
         
         if (results.hasOwnProperty(idx)) {
 
-        output.push({source:results[idx]['n']['_data']['data']['name'],target:results[idx]['m']['_data']['data']['name']});
+        output.push({source:results[idx]['n']['_data']['data']['nameid'],id:results[idx]['r']['_data']['data']['id'],target:results[idx]['m']['_data']['data']['nameid']});
         }}
     console.log(output)  
       res.json(output)
@@ -39,6 +39,37 @@ module.exports = function(app,neo4j,fs,request,cheerio)
 
     });
 
+ app.get('/api/nodes:nameid',function(req, res) {
+      var _id = req.params.nameid
+        var query = [
+      'MATCH n-[r]->m',
+      'WHERE n.nameid="'+_id.slice(1)+'"',
+      'RETURN m limit 30;'].join('\n');   
+      var output=[];
+      console.log(query)
+      db.query(query, function (err, results) {
+        
+        
+    if(err)
+        res.send(err)
+    //console.log(results);
+    for (var idx in results) {
+        
+        if (results.hasOwnProperty(idx)) {
+                      var a = "Male"
+                      if(results[idx]['m']['_data']['data']['gender']=='2')
+                        a = "Female"
+                      else if(results[idx]['m']['_data']['data']['gender']=='0')
+                        a = "Neutral"
+        output.push({name:results[idx]['m']['_data']['data']['nameid'],id:results[idx]['m']['_data']['data']['name'].split(":")[1],gender:a,image:results[idx]['m']['_data']['data']['image'],count_of_issue_appearances:results[idx]['m']['_data']['data']['count_of_issue_appearances'],publisher:results[idx]['m']['_data']['data']['publisher'],creators:results[idx]['m']['_data']['data']['creators']});
+        }}
+    console.log(output)  
+      res.json(output)
+    
+
+});
+
+    });
 
 
     app.get('/api/allnodes', function(req, res) {
@@ -57,7 +88,7 @@ module.exports = function(app,neo4j,fs,request,cheerio)
     for (var idx in results) {
         
         if (results.hasOwnProperty(idx)) {
-        output.push(results[idx]['n']['_data']['data']);
+        output.push(results[idx]['n']['_data']['data']['nameid']);
         }}
 
       res.json(output)
@@ -66,6 +97,8 @@ module.exports = function(app,neo4j,fs,request,cheerio)
 });
 
     });
+
+
 
 
 
