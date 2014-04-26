@@ -17,7 +17,7 @@ $(window).load(function()
                 {
                     console.log(req['nodes'][idx]['image']);
                     var a = req['nodes'][idx]['nameid'];
-                    a = a.replace(" ","%20");
+                    a = replaceAll(" ","%20",a);
                     console.log(a);
                     if(req['nodes'][idx]['image'])
                         $('#carousel_ul').append('<li><div class="imagecontainer"><a href=http://localhost:8081/recommend?name='+a+'><table><tr><img src="'+req['nodes'][idx]['image']+'"/></tr><tr><center>'+req['nodes'][idx]['nameid']+'</center></tr></table></a></div></li>') ;
@@ -31,7 +31,11 @@ $(window).load(function()
                 var i=0;
                 for (idx in req)
                 {
-                    $('#carousel_ul1').append('<center><li><a href=http://www.amazon.com/Batman-The-Dark-Knight-Returns/dp/1563893428>'+req[idx]+'</a></li></center>') ;
+                    var s = replaceAll(" ","-",req[idx]);
+                    s = s.replace(":","");
+                    s = s.toLowerCase();
+                    console.log(s);
+                    $('#carousel_ul1').append('<center><li><a href=http://www.ebay.com/sch/i.html?_nkw='+s+'>'+req[idx]+'</a></li></center>') ;
                     if (idx>6)
                         break;
                 }
@@ -109,6 +113,10 @@ $(window).load(function() {
  console.log("SDfsdfsdf"+globalName)
 });
 */
+
+function replaceAll(find, replace, str) {
+  return str.replace(new RegExp(find, 'g'), replace);
+}
 
 function getURLParameter(name) {
     return decodeURI(
