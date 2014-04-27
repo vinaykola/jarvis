@@ -55,6 +55,8 @@ Go to the main folder of the neo4j database : /var/lib/neo4j and run sudo ./bin/
 
 5) Return to the main folder of the project jarvis/frontend and run the following command to start a server on localhost:8081
 
+	nodemon server.js
+
 6) You can now access the website at the following URL http://localhost:8081/index
 
 To use the project:
