@@ -45,7 +45,11 @@ $(window).load(function()
                      {
                          for (idx in req)
                         {
-                            $('#carousel_ul1').append('<center><li><a href=http://www.amazon.com/Batman-The-Dark-Knight-Returns/dp/1563893428>'+req[idx]+'</a></li></center>') ;
+                            var s = replaceAll(" ","-",req[idx]);
+                            s = s.replace(":","");
+                            s = s.toLowerCase();
+                            console.log(s);
+                            $('#carousel_ul1').append('<center><li><a href=http://www.ebay.com/sch/i.html?_nkw='+s+'>'+req[idx]+'</a></li></center>') ;
                             if (idx>6)
                                 break;
                         }
