@@ -17,7 +17,7 @@ Clone the repository. Install nodemon and angular libraries to run the package. 
 	
 	sudo apt-get install nodejs
 
-	also run,
+also run,
 
 	sudo apt-get install nodejs-legacy
 
@@ -43,14 +43,14 @@ or download the binary from here : http://nodejs.org/download/ Ensure that the i
 	We are currently working on version 2.0.2 of the software
 
 Copy and replace the neo4j data folder (/var/lib/neo4j/data) with the one in the repository. Edit the neo4j.properties file (in /etc/neo4j) and uncomment the following lines : 
-
+```
 allow_store_upgrade=true
 keep_logical_logs=true
 node_auto_indexing=true
 node_keys_indexable=name
 relationship_auto_indexing=true
 relationship_keys_indexable=name
-
+```
 Go to the main folder of the neo4j database : /var/lib/neo4j and run sudo ./bin/neo4j start on the terminal. This will start the neo4j database server at port 7474. You can view and use the console at http://localhost:7474/webadmin/#/console/ . 
 
 5) Return to the main folder of the project jarvis/frontend and run the following command to start a server on localhost:8081
